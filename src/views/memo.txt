@@ -1,0 +1,34 @@
+>eslintrc.js
+rulesに"no-unused-vars": "off",
+parserOptionsにemcaVersion: 2020, でRCみたいなやつ
+
+>直下に.prettierrcを作成
+{
+    "semi": false,
+    "tabWidth": 4,
+    "htmlWhitespaceSensitivity": "ignore"
+}
+"plugin:prettier/recommended",
+は消す
+
+>package.json
+"lint": "vue-cli-service lint --fix"
+でnpm run lintで自動整形してくれる
+
+vueファイルのもともと
+<!-- javascriptを記述する場所 -->
+<script setup></script>
+
+<!-- マークアップでhtmlを記述する場所 -->
+<template>
+    <div></div>
+</template>
+
+npm run lint
+でlint関連のエラーを解決！
+
+emit: 子から親の値を呼び出す
+props: 親から子への値渡し
+
+困ったら// eslint-disable-next-line
+でeslintを回避
