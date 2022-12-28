@@ -2,18 +2,111 @@
 <script setup>
 import { ref } from "vue"
 import { supabase } from "../supabase.js"
+import axios from "axios"
 
 // tasks: 登録したタスク情報
 const tasks = ref([])
 // task: inputから追加予定のタスク
 const task = ref("")
+const input = ref("")
 
-const getTasks = async () => {
-	let { data, error, status } = await supabase.from('tasks').select('*')
-	console.log(error)
-  	tasks.value = data
+const username = ref("")
+const reason = ref("")
+
+// chatGPTで生成、有能すぎて...
+function parseUrl(url) {
+	const regex = /^https:\/\/atcoder\.jp\/contests\/(.+)\/tasks\/(.+)$/
+	const match = regex.exec(url)
+	if (match) {
+		const [, contest, task] = match
+		return [contest, task]
+	} else {
+		return [null, null]
+	}
 }
-getTasks()
+// 使用例
+console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks/agc060_f")) // ['agc060', 'agc060_f']
+console.log(parseUrl("https://atcoder.jp/contests/contest1/tasks/task1")) // ['contest1', 'task1']
+console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks")) // null
+
+async function getProblemInfo(problemId) {
+	const url = "https://kenkoooo.com/atcoder/resources/problems.json"
+    const params = JSON.stringify({
+		// image: image.value,
+    })
+
+    try {
+		const response = await axios.get(url)
+		console.log(response.data)
+
+		const dataIndex = response.data.findIndex(data => data.id === problemId)
+		if (dataIndex === -1) return null
+		console.log(dataIndex)
+		
+		console.log(response.data[dataIndex])
+		return response.data[dataIndex]
+	} catch (error) {
+		console.log(error)
+		return null
+	}
+}
+
+async function getDifficulty(problemId) {
+	const url = "https://kenkoooo.com/atcoder/resources/problem-models.json"
+    const params = JSON.stringify({
+		// image: image.value,
+    })
+
+    try {
+		const response = await axios.get(url)
+		console.log(response.data)
+		
+		console.log(response.data[problemId].difficulty)
+		return response.data[problemId].difficulty
+	} catch (error) {
+		console.log(error)
+		return null
+	}
+}
+
+// AtCoder ProblemsのAPI叩いてデータベースに登録
+const addProblem = async () => {
+	const [contestId, problemId] = parseUrl(input.value)
+	console.log(contestId)
+	console.log(problemId)
+	if (contestId === null || problemId === null) {
+		alert("Error! Invalid URL. Please put a valid problem URL. (ex. https://atcoder.jp/contests/abc999/tasks/abc999_x )")
+		return
+	}
+
+	const problemInfo = await getProblemInfo(problemId)
+	if (problemInfo === null) {
+		alert("Error! Problem does not exist. Please put a valid problem URL.")
+		return
+	}
+	console.log(problemInfo)
+
+	const difficulty = await getDifficulty(problemId)
+	if (difficulty === null) {
+		alert("Error! Problem does not exist. Please put a valid problem URL.")
+		return
+	}
+	console.log(difficulty)
+	
+	const { data, error } = await supabase
+		.from("problems")
+		.insert([{
+			contest_id: problemInfo.contest_id,
+			problem_index: problemInfo.problem_index,
+			problem_name: problemInfo.name,
+			difficulty: difficulty,
+			username: username.value,
+			reason: reason.value,
+			// tag: ,
+		}])
+		.select('*')
+	console.log(error)
+}
 
 const addTask = async () => {
 	const { data, error } = await supabase
@@ -51,19 +144,14 @@ const updateTask = async (task) => {
 <!-- マークアップでhtmlを記述する場所 -->
 <template>
     <h1>登録</h1>
-    <ul>
-        <li v-for="task in tasks" :key="task.id" :style='task.completed ? "text-decoration:line-through" : ""'>
-            <span><input type="checkbox" v-model="task.completed" @change="updateTask(task)" /></span>
-            <span>{{ task.task }}</span>
-            <button @click="deleteTask(task.id)">削除</button>
-        </li>
-    </ul>
-    <form @submit.prevent="addTask">
+    <form @submit.prevent="addProblem">
         <div>
-            <input v-model="task" />
+            <input v-model="input" placeholder="https://atcoder.jp/contests/agc060/tasks/agc060_f" />
+            <input v-model="username" placeholder="Guest" />
+            <input v-model="reason" placeholder="良問だと思った理由" />
         </div>
         <div>
-            <button type="submit">他横行</button>
+            <button type="submit">登録</button>
         </div>
     </form>
     <RouterLink v-bind:to="{ path: '/' }">一覧に戻る</RouterLink>
