@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.2.2",
+    "axios": "^1.2.1",
     "core-js": "^3.8.3",
     "vite": "^4.0.3",
     "vue": "^3.2.13",
