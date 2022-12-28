@@ -24,7 +24,6 @@ function parseUrl(url) {
 		return [null, null]
 	}
 }
-
 // 使用例
 console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks/agc060_f")) // ['agc060', 'agc060_f']
 console.log(parseUrl("https://atcoder.jp/contests/contest1/tasks/task1")) // ['contest1', 'task1']
@@ -52,6 +51,24 @@ async function getProblemInfo(problemId) {
 	}
 }
 
+async function getDifficulty(problemId) {
+	const url = "https://kenkoooo.com/atcoder/resources/problem-models.json"
+    const params = JSON.stringify({
+		// image: image.value,
+    })
+
+    try {
+		const response = await axios.get(url)
+		console.log(response.data)
+		
+		console.log(response.data[problemId].difficulty)
+		return response.data[problemId].difficulty
+	} catch (error) {
+		console.log(error)
+		return null
+	}
+}
+
 // AtCoder ProblemsのAPI叩いてデータベースに登録
 const addProblem = async () => {
 	const [contestId, problemId] = parseUrl(input.value)
@@ -68,6 +85,13 @@ const addProblem = async () => {
 		return
 	}
 	console.log(problemInfo)
+
+	const difficulty = await getDifficulty(problemId)
+	if (difficulty === null) {
+		alert("Error! Problem does not exist. Please put a valid problem URL.")
+		return
+	}
+	console.log(difficulty)
 	
 	const { data, error } = await supabase
 		.from("problems")
@@ -75,9 +99,9 @@ const addProblem = async () => {
 			contest_id: problemInfo.contest_id,
 			problem_index: problemInfo.problem_index,
 			problem_name: problemInfo.name,
-			// difficulty: ,
+			difficulty: difficulty,
 			username: username.value,
-			// reason: ,
+			reason: reason.value,
 			// tag: ,
 		}])
 		.select('*')
