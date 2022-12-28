@@ -10,14 +10,8 @@ const tasks = ref([])
 const task = ref("")
 const input = ref("")
 
-const username = ref("Guest")
-
-const getTasks = async () => {
-	let { data, error, status } = await supabase.from('tasks').select('*')
-	console.log(error)
-  	tasks.value = data
-}
-// getTasks()
+const username = ref("")
+const reason = ref("")
 
 // chatGPTで生成、有能すぎて...
 function parseUrl(url) {
@@ -26,21 +20,15 @@ function parseUrl(url) {
 	if (match) {
 		const [, contest, task] = match
 		return [contest, task]
-  	} else {
-    	return [null, null]
-  	}
+	} else {
+		return [null, null]
+	}
 }
 
 // 使用例
 console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks/agc060_f")) // ['agc060', 'agc060_f']
-console.log(parseUrl("https://atcoder.jp/contests/abc060/tasks/abc060_f")) // ['abc060', 'abc060_f']
-console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks/agc060_g")) // ['agc060', 'agc060_g']
-console.log(parseUrl("https://atcoder.jp/contests/abc060/tasks/abc060_g")) // ['abc060', 'abc060_g']
 console.log(parseUrl("https://atcoder.jp/contests/contest1/tasks/task1")) // ['contest1', 'task1']
-console.log(parseUrl("https://atcoder.jp/contests/contest2/tasks/task2")) // ['contest2', 'task2']
-console.log(parseUrl("https://atcoder.jp/contests/contest3/tasks/task3")) // ['contest3', 'task3']
 console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks")) // null
-console.log(parseUrl("https://atcoder.jp/contests/abc060/tasks")) // null
 
 async function getProblemInfo(problemId) {
 	const url = "https://kenkoooo.com/atcoder/resources/problems.json"
@@ -48,28 +36,14 @@ async function getProblemInfo(problemId) {
 		// image: image.value,
     })
 
-    // axios
-    //     .get(url)
-    //     .then((response) => {
-    //         // ここで'data:image/pngbase64, ...'から始まる文字列がログに流れれば送信成功
-	// 		console.log(response.data)
-	// 		// 
-	// 		const dataIndex = response.data.findIndex(data => data.id === problemId)
-	// 		if (dataIndex === -1) return null
-	// 		console.log(dataIndex)
-	// 		console.log(response.data[dataIndex])
-	// 		return response.data[dataIndex]
-    //     })
-    //     .catch((error) => {
-    //         console.log(error)
-	// 		return null
-    //     })
     try {
 		const response = await axios.get(url)
 		console.log(response.data)
+
 		const dataIndex = response.data.findIndex(data => data.id === problemId)
 		if (dataIndex === -1) return null
 		console.log(dataIndex)
+		
 		console.log(response.data[dataIndex])
 		return response.data[dataIndex]
 	} catch (error) {
@@ -89,6 +63,10 @@ const addProblem = async () => {
 	}
 
 	const problemInfo = await getProblemInfo(problemId)
+	if (problemInfo === null) {
+		alert("Error! Problem does not exist. Please put a valid problem URL.")
+		return
+	}
 	console.log(problemInfo)
 	
 	const { data, error } = await supabase
@@ -142,22 +120,14 @@ const updateTask = async (task) => {
 <!-- マークアップでhtmlを記述する場所 -->
 <template>
     <h1>登録</h1>
-    <ul>
-        <li v-for="task in tasks" :key="task.id" :style='task.completed ? "text-decoration:line-through" : ""'>
-            <span><input type="checkbox" v-model="task.completed" @change="updateTask(task)" /></span>
-            <span>{{ task.task }}</span>
-            <button @click="deleteTask(task.id)">削除</button>
-        </li>
-    </ul>
-    <!-- <form @submit.prevent="addTask"> -->
     <form @submit.prevent="addProblem">
         <div>
-            <!-- <input v-model="task" /> -->
             <input v-model="input" placeholder="https://atcoder.jp/contests/agc060/tasks/agc060_f" />
             <input v-model="username" placeholder="Guest" />
+            <input v-model="reason" placeholder="良問だと思った理由" />
         </div>
         <div>
-            <button type="submit">投稿</button>
+            <button type="submit">登録</button>
         </div>
     </form>
     <RouterLink v-bind:to="{ path: '/' }">一覧に戻る</RouterLink>

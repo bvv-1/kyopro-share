@@ -11,7 +11,7 @@ const task = ref("")
 const getTasks = async () => {
 	let { data, error, status } = await supabase.from('tasks').select('*')
 	console.log(error)
-  	tasks.value = data
+	tasks.value = data
 }
 getTasks()
 
