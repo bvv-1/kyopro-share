@@ -10,6 +10,8 @@ const tasks = ref([])
 const task = ref("")
 const input = ref("")
 
+const username = ref("Guest")
+
 const getTasks = async () => {
 	let { data, error, status } = await supabase.from('tasks').select('*')
 	console.log(error)
@@ -40,7 +42,41 @@ console.log(parseUrl("https://atcoder.jp/contests/contest3/tasks/task3")) // ['c
 console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks")) // null
 console.log(parseUrl("https://atcoder.jp/contests/abc060/tasks")) // null
 
+async function getProblemInfo(problemId) {
+	const url = "https://kenkoooo.com/atcoder/resources/problems.json"
+    const params = JSON.stringify({
+		// image: image.value,
+    })
 
+    // axios
+    //     .get(url)
+    //     .then((response) => {
+    //         // ここで'data:image/pngbase64, ...'から始まる文字列がログに流れれば送信成功
+	// 		console.log(response.data)
+	// 		// 
+	// 		const dataIndex = response.data.findIndex(data => data.id === problemId)
+	// 		if (dataIndex === -1) return null
+	// 		console.log(dataIndex)
+	// 		console.log(response.data[dataIndex])
+	// 		return response.data[dataIndex]
+    //     })
+    //     .catch((error) => {
+    //         console.log(error)
+	// 		return null
+    //     })
+    try {
+		const response = await axios.get(url)
+		console.log(response.data)
+		const dataIndex = response.data.findIndex(data => data.id === problemId)
+		if (dataIndex === -1) return null
+		console.log(dataIndex)
+		console.log(response.data[dataIndex])
+		return response.data[dataIndex]
+	} catch (error) {
+		console.log(error)
+		return null
+	}
+}
 
 // AtCoder ProblemsのAPI叩いてデータベースに登録
 const addProblem = async () => {
@@ -52,29 +88,22 @@ const addProblem = async () => {
 		return
 	}
 
-	const url = "https://kenkoooo.com/atcoder/resources/problems.json"
-    const params = JSON.stringify({
-		// image: image.value,
-    })
-
-    await axios
-        .get(url)
-        .then((response) => {
-            // ここで'data:image/pngbase64, ...'から始まる文字列がログに流れれば送信成功
-            // dogImage.value = response.data.message
-			console.log(response.data)
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+	const problemInfo = await getProblemInfo(problemId)
+	console.log(problemInfo)
 	
-	// const { data, error } = await supabase
-	// 	.from('tasks')
-	// 	.insert([{ task: task.value }])
-	// 	.select('*')
-	// console.log(error)
-	// tasks.value.push(data[0])
-	// task.value = ''
+	const { data, error } = await supabase
+		.from("problems")
+		.insert([{
+			contest_id: problemInfo.contest_id,
+			problem_index: problemInfo.problem_index,
+			problem_name: problemInfo.name,
+			// difficulty: ,
+			username: username.value,
+			// reason: ,
+			// tag: ,
+		}])
+		.select('*')
+	console.log(error)
 }
 
 const addTask = async () => {
@@ -125,6 +154,7 @@ const updateTask = async (task) => {
         <div>
             <!-- <input v-model="task" /> -->
             <input v-model="input" placeholder="https://atcoder.jp/contests/agc060/tasks/agc060_f" />
+            <input v-model="username" placeholder="Guest" />
         </div>
         <div>
             <button type="submit">投稿</button>
