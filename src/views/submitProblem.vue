@@ -103,6 +103,7 @@ const addProblem = async () => {
 			username: username.value,
 			reason: reason.value,
 			// tag: ,
+			url: input.value,
 		}])
 		.select('*')
 	console.log(error)

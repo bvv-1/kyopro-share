@@ -9,7 +9,7 @@ const tasks = ref([])
 const task = ref("")
 
 const getTasks = async () => {
-	let { data, error, status } = await supabase.from('tasks').select('*')
+	let { data, error, status } = await supabase.from('problems').select('*')
 	console.log(error)
 	tasks.value = data
 }
@@ -50,21 +50,13 @@ const updateTask = async (task) => {
 
 <!-- マークアップでhtmlを記述する場所 -->
 <template>
-    <h1>Tasks</h1>
+    <h1>良問</h1>
     <ul>
-        <li v-for="task in tasks" :key="task.id" :style='task.completed ? "text-decoration:line-through" : ""'>
-            <span><input type="checkbox" v-model="task.completed" @change="updateTask(task)" /></span>
-            <span>{{ task.task }}</span>
-            <button @click="deleteTask(task.id)">削除</button>
+        <li v-for="task in tasks" :key="task.id">
+            <!-- <span><input type="checkbox" v-model="task.completed" @change="updateTask(task)" /></span> -->
+            <span>{{ task.problem_name }}</span>
+            <!-- <button @click="deleteTask(task.id)">削除</button> -->
         </li>
     </ul>
-    <form @submit.prevent="addTask">
-        <div>
-            <input v-model="task" />
-        </div>
-        <div>
-            <button type="submit">タスクを登録</button>
-        </div>
-    </form>
 	<RouterLink v-bind:to="{ path: '/submit' }">良問を登録する</RouterLink>
 </template>
