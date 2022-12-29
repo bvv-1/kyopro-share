@@ -31,7 +31,7 @@ console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks/agc060_f")) // ['
 console.log(parseUrl("https://atcoder.jp/contests/contest1/tasks/task1")) // ['contest1', 'task1']
 console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks")) // null
 
-async function getProblemInfo(problemId) {
+async function fetchProblemInfo(problemId) {
 	const url = "https://kenkoooo.com/atcoder/resources/problems.json"
     const params = JSON.stringify({
 		// image: image.value,
@@ -53,7 +53,7 @@ async function getProblemInfo(problemId) {
 	}
 }
 
-async function getDifficulty(problemId) {
+async function fetchDifficulty(problemId) {
 	const url = "https://kenkoooo.com/atcoder/resources/problem-models.json"
     const params = JSON.stringify({
 		// image: image.value,
@@ -81,14 +81,14 @@ const addProblem = async () => {
 		return
 	}
 
-	const problemInfo = await getProblemInfo(problemId)
+	const problemInfo = await fetchProblemInfo(problemId)
 	if (problemInfo === null) {
 		alert("Error! Problem does not exist. Please put a valid problem URL.")
 		return
 	}
 	console.log(problemInfo)
 
-	const difficulty = await getDifficulty(problemId)
+	const difficulty = await fetchDifficulty(problemId)
 	if (difficulty === null) {
 		alert("Error! Problem does not exist. Please put a valid problem URL.")
 		return
@@ -109,16 +109,6 @@ const addProblem = async () => {
 		}])
 		.select('*')
 	console.log(error)
-}
-
-const addTask = async () => {
-	const { data, error } = await supabase
-		.from('tasks')
-		.insert([{ task: task.value }])
-		.select('*')
-	console.log(error)
-	tasks.value.push(data[0])
-	task.value = ''
 }
 
 const deleteTask = async (id) => {
