@@ -2,7 +2,9 @@
 <script setup>
 import { ref } from "vue"
 import { supabase } from "../supabase.js"
+
 import HeaderComponent from '@/components/HeaderComponent.vue'
+import difficultyCircle from "@/components/difficultyCircle.vue"
 
 // problems: データベースの中身そのまま持ってくる、登録した問題
 const problems = ref([])
@@ -101,16 +103,20 @@ const updateTask = async (task) => {
 											<v-container>
 												<template slot="progress">
 													<v-progress-linear
-													color="deep-purple"
-													height="10"
-													indeterminate
+														color="deep-purple"
+														height="10"
+														indeterminate
 													></v-progress-linear>
 												</template>
 												
 												<v-row>
-													<v-col>diff</v-col>
 													<v-col>
-														<v-card-title>{{ problem.problem_name }}</v-card-title>
+														<difficultyCircle :rating="problem.difficulty" />
+													</v-col>
+													<v-col>
+														<v-card-title>
+															{{ problem.problem_name }}
+														</v-card-title>
 													</v-col>
 												</v-row>
 
@@ -132,7 +138,7 @@ const updateTask = async (task) => {
 													</v-row>
 
 													<div class="my-4 text-subtitle-1">
-														{{ problem.contest_id.toUpperCase() }} {{ problem.problem_index }}
+														{{ problem.contest_id.toUpperCase() }} - {{ problem.problem_index }}
 													</div>
 
 													<div>{{ problem.reason }}</div>
@@ -140,19 +146,12 @@ const updateTask = async (task) => {
 
 												<v-divider class="mx-4"></v-divider>
 
-												<!-- <v-card-title></v-card-title> -->
 
-												<v-card-text>
-													<v-chip-group
-														v-model="selection"
-														active-class="deep-purple accent-4 white--text"
-														column
-													>
-														<v-chip>#DP</v-chip>
-														<v-chip>#BFS</v-chip>
-														<v-chip>#Union-Find</v-chip>
-													</v-chip-group>
-												</v-card-text>
+												<v-chip-group v-model="selection" active-class="deep-purple accent-4 white--text" column>
+													<v-chip>#DP</v-chip>
+													<v-chip>#BFS</v-chip>
+													<v-chip>#Union-Find</v-chip>
+												</v-chip-group>
 												
 												<v-row>
 													<v-col>
