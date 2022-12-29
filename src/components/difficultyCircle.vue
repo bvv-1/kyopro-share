@@ -76,7 +76,7 @@ console.log(styleOptions.value)
 </script>
 
 <template>
-    <span id="dcircle" :class="styleOptions" ></span>
+    <div id="dcircle" :style=styleOptions ></div>
 </template>
 
 <style>
@@ -88,7 +88,5 @@ console.log(styleOptions.value)
     margin-right: 5px;
     height: 30px;
     width: 30px;
-    border-color: #008000;
-    background: border-box linear-gradient(to top, #008000 36.5%, rgba(0,0,0,0) 36.5%)
 }
 </style>

@@ -138,7 +138,7 @@ const updateTask = async (task) => {
 													</v-row>
 
 													<div class="my-4 text-subtitle-1">
-														{{ problem.contest_id.toUpperCase() }} {{ problem.problem_index }}
+														{{ problem.contest_id.toUpperCase() }} - {{ problem.problem_index }}
 													</div>
 
 													<div>{{ problem.reason }}</div>
