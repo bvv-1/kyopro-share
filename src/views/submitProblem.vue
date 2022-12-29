@@ -4,6 +4,8 @@ import { ref } from "vue"
 import { supabase } from "../supabase.js"
 import axios from "axios"
 
+import HeaderComponent from '@/components/HeaderComponent.vue'
+
 // tasks: 登録したタスク情報
 const tasks = ref([])
 // task: inputから追加予定のタスク
@@ -144,16 +146,51 @@ const updateTask = async (task) => {
 
 <!-- マークアップでhtmlを記述する場所 -->
 <template>
-    <h1>登録</h1>
-    <form @submit.prevent="addProblem">
-        <div>
-            <input v-model="input" placeholder="https://atcoder.jp/contests/agc060/tasks/agc060_f" />
-            <input v-model="username" placeholder="Guest" />
-            <input v-model="reason" placeholder="良問だと思った理由" />
-        </div>
-        <div>
-            <button type="submit">登録</button>
-        </div>
-    </form>
-    <RouterLink v-bind:to="{ path: '/' }">一覧に戻る</RouterLink>
+    <HeaderComponent></HeaderComponent>
+	<v-app id="inspire">
+		<v-main class="bg-grey-lighten-3">
+			<v-container>
+				<v-row>
+					<!-- 左のやつ -->
+					<v-col cols="2">
+						<v-sheet rounded="lg">
+							<v-list rounded="lg">
+							<v-list-item v-for="n in 5" :key="n" link>
+								<v-list-item-title>
+									List Item {{ n }}
+								</v-list-item-title>
+							</v-list-item>
+			
+							<v-divider class="my-2"></v-divider>
+			
+							<v-list-item link color="grey-lighten-4" >
+								<v-list-item-title>
+									Refresh
+								</v-list-item-title>
+							</v-list-item>
+							</v-list>
+						</v-sheet>
+					</v-col>
+					
+					<!-- 右のやつ -->
+					<v-col>
+						<v-sheet min-height="70vh" rounded="lg" >
+							<form @submit.prevent="addProblem">
+								<div>
+									<input v-model="input" placeholder="https://atcoder.jp/contests/agc060/tasks/agc060_f" />
+									<input v-model="username" placeholder="Guest" />
+									<input v-model="reason" placeholder="良問だと思った理由" />
+								</div>
+								<div>
+									<button type="submit">登録</button>
+								</div>
+							</form>
+						</v-sheet>
+					</v-col>
+				</v-row>
+			</v-container>
+		</v-main>
+	</v-app>
+	
+	
 </template>
