@@ -6,15 +6,12 @@ import axios from "axios"
 
 import HeaderComponent from '@/components/HeaderComponent.vue'
 
-// tasks: 登録したタスク情報
-const tasks = ref([])
-// task: inputから追加予定のタスク
-const task = ref("")
+// フォームに入力されたもの
 const input = ref("")
-
 const username = ref("")
 const reason = ref("")
 
+// 入力されたURLが有効であるか調べ、有効ならcontest番号と問題idを抜き出す関数
 // chatGPTで生成、有能すぎて...
 function parseUrl(url) {
 	const regex = /^https:\/\/atcoder\.jp\/contests\/(.+)\/tasks\/(.+)$/
@@ -31,11 +28,9 @@ console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks/agc060_f")) // ['
 console.log(parseUrl("https://atcoder.jp/contests/contest1/tasks/task1")) // ['contest1', 'task1']
 console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks")) // null
 
+// AtCoder ProblemsのAPIを叩いて問題情報を得る関数
 async function fetchProblemInfo(problemId) {
 	const url = "https://kenkoooo.com/atcoder/resources/problems.json"
-    const params = JSON.stringify({
-		// image: image.value,
-    })
 
     try {
 		const response = await axios.get(url)
@@ -53,6 +48,7 @@ async function fetchProblemInfo(problemId) {
 	}
 }
 
+// AtCoder ProblemsのAPIを叩いて難易度情報を得る関数
 async function fetchDifficulty(problemId) {
 	const url = "https://kenkoooo.com/atcoder/resources/problem-models.json"
     const params = JSON.stringify({
@@ -71,17 +67,19 @@ async function fetchDifficulty(problemId) {
 	}
 }
 
-// AtCoder ProblemsのAPI叩いてデータベースに登録
+// AtCoder ProblemsのAPI叩いた結果をデータベースに登録する関数
 const addProblem = async () => {
 	const [contestId, problemId] = parseUrl(input.value)
-	console.log(contestId)
-	console.log(problemId)
+	// 入力されたURLが適切でなければエラーを返す
 	if (contestId === null || problemId === null) {
 		alert("Error! Invalid URL. Please put a valid problem URL. (ex. https://atcoder.jp/contests/abc999/tasks/abc999_x )")
 		return
 	}
+	console.log(contestId)
+	console.log(problemId)
 
 	const problemInfo = await fetchProblemInfo(problemId)
+	// 該当する問題がなければエラーを返す
 	if (problemInfo === null) {
 		alert("Error! Problem does not exist. Please put a valid problem URL.")
 		return
@@ -89,12 +87,14 @@ const addProblem = async () => {
 	console.log(problemInfo)
 
 	const difficulty = await fetchDifficulty(problemId)
+	// 該当する問題がなければエラーを返す
 	if (difficulty === null) {
 		alert("Error! Problem does not exist. Please put a valid problem URL.")
 		return
 	}
 	console.log(difficulty)
 	
+	// データベースにinsert
 	const { data, error } = await supabase
 		.from("problems")
 		.insert([{
@@ -109,28 +109,6 @@ const addProblem = async () => {
 		}])
 		.select('*')
 	console.log(error)
-}
-
-const deleteTask = async (id) => {
-	const { data, error } = await supabase
-		.from('tasks')
-		.delete()
-		.eq('id', id)
-		.select('id')
-	console.log(error)
-	const index = tasks.value.findIndex((task) => task.id === data[0].id)
-	tasks.value.splice(index, 1)
-}
-
-const updateTask = async (task) => {
-	const { data, error } = await supabase
-		.from('tasks')
-		.update({ completed: task.completed })
-		.eq('id', task.id)
-		.select('*')
-	console.log(error)
-	const currentTask = tasks.value.find((task) => task.id === data[0].id)
-	currentTask.completed = data[0].completed
 }
 </script>
 
