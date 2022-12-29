@@ -120,25 +120,25 @@ const addTask = async () => {
 }
 
 const deleteTask = async (id) => {
-  	const { data, error } = await supabase
-    	.from('tasks')
-    	.delete()
-    	.eq('id', id)
-    	.select('id')
+	const { data, error } = await supabase
+		.from('tasks')
+		.delete()
+		.eq('id', id)
+		.select('id')
 	console.log(error)
 	const index = tasks.value.findIndex((task) => task.id === data[0].id)
-  	tasks.value.splice(index, 1)
+	tasks.value.splice(index, 1)
 }
 
 const updateTask = async (task) => {
-  	const { data, error } = await supabase
-    	.from('tasks')
-    	.update({ completed: task.completed })
-    	.eq('id', task.id)
-    	.select('*')
+	const { data, error } = await supabase
+		.from('tasks')
+		.update({ completed: task.completed })
+		.eq('id', task.id)
+		.select('*')
 	console.log(error)
 	const currentTask = tasks.value.find((task) => task.id === data[0].id)
-  	currentTask.completed = data[0].completed
+	currentTask.completed = data[0].completed
 }
 </script>
 
