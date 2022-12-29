@@ -1,5 +1,19 @@
 <script setup>
+import Modal from "@/components/modal/MyModal.vue"
+</script>
 
+<!-- modal用 -->
+<script>
+export default {
+	components: {
+		Modal
+	},
+	data() {
+		return {
+			showModal: false
+		}
+	}
+}
 </script>
 
 <template>
@@ -12,9 +26,18 @@
 
             <v-btn>About</v-btn>
             <v-btn to="/">List</v-btn>
-            <v-btn to="/submit">Submit</v-btn>
+            <!-- <v-btn to="/submit">Submit</v-btn> -->
+            <v-btn id="show-modal" @click="showModal = true">Submit</v-btn>		
+            <Teleport to="body">
+                <!-- use the modal component, pass in the prop -->
+                <modal :show="showModal" @close="showModal = false">
+                    <template #header>
+                        <h3>custom header</h3>
+                    </template>
+                </modal>
+            </Teleport>
             <v-btn>Queue</v-btn>
-
+            
             <v-spacer></v-spacer>
 
             <v-responsive max-width="260">
