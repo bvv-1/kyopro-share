@@ -5,6 +5,7 @@ import { supabase } from "../supabase.js"
 
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import difficultyCircle from "@/components/difficultyCircle.vue"
+import Modal from "@/components/modal/MyModal.vue"
 
 // problems: データベースの中身そのまま持ってくる、登録した問題
 const problems = ref([])
@@ -66,6 +67,38 @@ const updateTask = async (task) => {
 	console.log(error)
 	const currentTask = tasks.value.find((task) => task.id === data[0].id)
 	currentTask.completed = data[0].completed
+}
+
+const modal = ref(false)
+
+// const openModal = () => {
+//    template: `
+//    <div id="overlay">
+//        <div id="content">
+//            <div class="text-right">
+//                <button type="button" v-on:click="$emit('close')" class="btn btn-success">閉じる <i class="fas fa-times"></i></button>
+//            </div>
+//            <div>
+//                <p>開きました！！</p>
+//            </div>
+//        </div>
+//    </div>
+//    `,
+// }
+
+</script>
+
+<!-- modal用 -->
+<script>
+export default {
+	components: {
+		Modal
+	},
+	data() {
+		return {
+			showModal: false
+		}
+	}
 }
 </script>
 
@@ -179,13 +212,23 @@ const updateTask = async (task) => {
 										</v-card>
 									</v-col>
 								</v-row>
+								<button id="show-modal" @click="showModal = true">Show Modal</button>
+				
+								<Teleport to="body">
+									<!-- use the modal component, pass in the prop -->
+									<modal :show="showModal" @close="showModal = false">
+										<template #header>
+											<h3>custom header</h3>
+										</template>
+									</modal>
+								</Teleport>
 							</v-container>
 							
 						</v-sheet>
 					</v-col>
 				</v-row>
 			</v-container>
-			
+				
 		</v-main>
 	</v-app>
 </template>
