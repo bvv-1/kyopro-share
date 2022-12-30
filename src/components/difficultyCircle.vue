@@ -26,7 +26,7 @@ const RatingColors = [
 ]
 
 function getColor(rating) {
-    if (rating<0) return "Black"
+    if (rating<0) return "Grey"
     const index = Math.min(Math.floor(rating / 400), RatingColors.length - 2)
     return RatingColors[index + 1]
 }
@@ -69,7 +69,7 @@ function getStyleOptions(color, fillRatio) {
 }
 
 color.value = getColor(props.rating)
-const fillRatio = props.rating >= 3200 ? 1.0 : (props.rating % 400) / 400
+const fillRatio = props.rating >= 3200 ? 1.0 : props.rating < 0 ? 0.0 : (props.rating % 400) / 400
 styleOptions.value = getStyleOptions(color.value, fillRatio)
 console.log(styleOptions.value)
 
