@@ -3,7 +3,6 @@ import { createRouter, createWebHashHistory } from "vue-router"
 // viewsのvueファイルにRouterする際は加える
 import indexView from "@/views/indexView.vue"
 import viewList from "@/views/viewList.vue"
-import submitProblem from "@/views/submitProblem.vue"
 
 const routes = [
     {
@@ -17,12 +16,6 @@ const routes = [
         path: "/",
         name: "viewList",
         component: viewList,
-    },
-    {
-        // 削除予定
-        path: "/submit",
-        name: "submitProblem",
-        component: submitProblem,
     },
 ]
 
