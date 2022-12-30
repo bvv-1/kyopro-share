@@ -1,32 +1,113 @@
-<script>
-export default {
-    props: {
-        show: Boolean
-    }
+<script setup>
+import { ref } from "vue"
+
+// eslint-disable-next-line
+const props = defineProps({ show: Boolean })
+
+const items = ref(['Programming', 'Playing video games', 'Watching movies', 'Sleeping'])
+const select = ref(['Streaming', 'Eating'])
+
+const remove = (item) => {
+    select.value.splice(select.value.indexOf(item), 1)
 }
 </script>
 
+  <script>
+    export default {
+      data () {
+        return {
+          select: ['Vuetify', 'Programming'],
+          items: [
+            'Programming',
+            'Design',
+            'Vue',
+            'Vuetify',
+          ],
+        }
+      },
+    }
+  </script>
+
 <template>
+    
     <Transition name="modal">
         <div v-if="show" class="modal-mask">
             <div class="modal-wrapper">
-                <div class="modal-container">
-                    <div class="modal-header">
-                        <slot name="header">default header</slot>
-                    </div>
+                <v-card class="modal-container">
+                    <v-card-title>
+                        <span class="text-h5">User Profile</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-text-field
+                                        label="Problem URL"
+                                        hint="ex. https://atcoder.jp/contests/abc283/tasks/abc283_a"
+                                        required
+                                    ></v-text-field>
+                                </v-col>
+                                
+                                <v-col cols="12">
+                                    <v-text-field
+                                        label="Username (optional)"
+                                    ></v-text-field>
+                                </v-col>
+                                
+                                <v-col cols="12">
+                                    <v-textarea
+                                        label="Reason"
+                                        required
+                                    ></v-textarea>
+                                </v-col>
 
-                    <div class="modal-body">
-                        <slot name="body">default body</slot>
-                    </div>
+                                <!-- タグ機能はあとで... -->
+                                <v-col cols="12">
+                                    <v-combobox
+                                        v-model="select"
+                                        :items="items"
+                                        chips
+                                        clearable
+                                        label="Tags"
+                                        multiple  
+                                    >
+                                        <template v-slot:selection="{ attrs, item, select, selected }">
+                                            <v-chip
+                                                v-bind="attrs"
+                                                :input-value="selected"
+                                                @click="select"
+                                                @click:close="remove(item)"
+                                            >
+                                                <strong>{{ item }}</strong>&nbsp;
+                                            </v-chip>
+                                        </template>
+                                    </v-combobox>
+                                </v-col>
+                                <v-chip closable>
+                                    Chip
+                                </v-chip>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            color="blue-darken-1"
+                            variant="text"
+                            @click="$emit('close')"
+                        >
+                            Close
+                        </v-btn>
+                        <v-btn
+                            color="blue-darken-1"
+                            variant="text"
+                            @click="$emit('close')"
+                        >
+                            Save
+                        </v-btn>
+                    </v-card-actions>
 
-                    <div class="modal-footer">
-                        <slot name="footer">
-                            default footer
-                            <button class="modal-default-button" @click="$emit('close')">OK</button>
-                        </slot>
-                    </div>
-
-                </div>
+                </v-card>
             </div>
         </div>
     </Transition>
@@ -51,9 +132,9 @@ export default {
 }
 
 .modal-container {
-    width: 300px;
+    width: 600px;
     margin: 0px auto;
-    padding: 20px 30px;
+    padding: 15px 20px;
     background-color: #fff;
     border-radius: 2px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);

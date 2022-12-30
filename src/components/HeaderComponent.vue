@@ -32,7 +32,7 @@ export default {
                 <!-- use the modal component, pass in the prop -->
                 <modal :show="showModal" @close="showModal = false">
                     <template #header>
-                        <h3>custom header</h3>
+                        <h3>Submit a new problem</h3>
                     </template>
                 </modal>
             </Teleport>
