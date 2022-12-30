@@ -1,35 +1,153 @@
 <script setup>
 import { ref } from "vue"
+import { supabase } from "@/supabase.js"
+import axios from "axios"
 
 // eslint-disable-next-line
 const props = defineProps({ show: Boolean })
 
-const items = ref(['Programming', 'Playing video games', 'Watching movies', 'Sleeping'])
-const select = ref(['Streaming', 'Eating'])
+const items = ref([
+    "Programming",
+    "Playing video games",
+    "Watching movies",
+    "Sleeping",
+])
+const select = ref(["Streaming", "Eating"])
 
 const remove = (item) => {
     select.value.splice(select.value.indexOf(item), 1)
 }
+
+// フォームに入力されたもの
+const input = ref({
+    url: "",
+    username: "Guest",
+    reason: "",
+    success: false,
+})
+
+// 入力されたURLが有効であるか調べ、有効ならcontest番号と問題idを抜き出す関数
+// chatGPTで生成、有能すぎて...
+function parseUrl(url) {
+    const regex = /^https:\/\/atcoder\.jp\/contests\/(.+)\/tasks\/(.+)$/
+    const match = regex.exec(url)
+    if (match) {
+        const [, contest, task] = match
+        return [contest, task]
+    } else {
+        return [null, null]
+    }
+}
+// 使用例
+console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks/agc060_f")) // ['agc060', 'agc060_f']
+console.log(parseUrl("https://atcoder.jp/contests/contest1/tasks/task1")) // ['contest1', 'task1']
+console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks")) // null
+
+// AtCoder ProblemsのAPIを叩いて問題情報を得る関数
+async function fetchProblemInfo(problemId) {
+    const url = "https://kenkoooo.com/atcoder/resources/problems.json"
+
+    try {
+        const response = await axios.get(url)
+        console.log(response.data)
+
+        const dataIndex = response.data.findIndex(
+            (data) => data.id === problemId
+        )
+        if (dataIndex === -1) return null
+        console.log(dataIndex)
+
+        console.log(response.data[dataIndex])
+        return response.data[dataIndex]
+    } catch (error) {
+        console.log(error)
+        return null
+    }
+}
+
+// AtCoder ProblemsのAPIを叩いて難易度情報を得る関数
+async function fetchDifficulty(problemId) {
+    const url = "https://kenkoooo.com/atcoder/resources/problem-models.json"
+    const params = JSON.stringify({
+        // image: image.value,
+    })
+
+    try {
+        const response = await axios.get(url)
+        console.log(response.data)
+
+        console.log(response.data[problemId].difficulty)
+        return response.data[problemId].difficulty
+    } catch (error) {
+        console.log(error)
+        return null
+    }
+}
+
+// AtCoder ProblemsのAPI叩いた結果をデータベースに登録する関数
+const addProblem = async () => {
+    const [contestId, problemId] = parseUrl(input.value.url)
+    // 入力されたURLが適切でなければエラーを返す
+    if (contestId === null || problemId === null) {
+        alert(
+            "Error! Invalid URL. Please put a valid problem URL. (ex. https://atcoder.jp/contests/abc999/tasks/abc999_x )"
+        )
+        return
+    }
+    console.log(contestId)
+    console.log(problemId)
+
+    const problemInfo = await fetchProblemInfo(problemId)
+    // 該当する問題がなければエラーを返す
+    if (problemInfo === null) {
+        alert("Error! Problem does not exist. Please put a valid problem URL.")
+        return
+    }
+    console.log(problemInfo)
+
+    const difficulty = await fetchDifficulty(problemId)
+    // 該当する問題がなければエラーを返す
+    if (difficulty === null) {
+        alert("Error! Problem does not exist. Please put a valid problem URL.")
+        return
+    }
+    console.log(difficulty)
+
+    // データベースにinsert
+    const { data, error } = await supabase
+        .from("problems")
+        .insert([
+            {
+                contest_id: problemInfo.contest_id,
+                problem_index: problemInfo.problem_index,
+                problem_name: problemInfo.name,
+                difficulty: difficulty,
+                username: input.value.username,
+                reason: input.value.reason,
+                // tag: ,
+                url: input.value.url,
+            },
+        ])
+        .select("*")
+    console.log(error)
+    input.value.success = true
+}
+
+console.log(input)
 </script>
 
-  <script>
-    export default {
-      data () {
+<script>
+export default {
+    data() {
         return {
-          select: ['Vuetify', 'Programming'],
-          items: [
-            'Programming',
-            'Design',
-            'Vue',
-            'Vuetify',
-          ],
+            select: ["Vuetify", "Programming"],
+            items: ["Programming", "Design", "Vue", "Vuetify"],
         }
-      },
-    }
-  </script>
+    },
+}
+</script>
 
 <template>
-    
     <Transition name="modal">
         <div v-if="show" class="modal-mask">
             <div class="modal-wrapper">
@@ -45,19 +163,22 @@ const remove = (item) => {
                                         label="Problem URL"
                                         hint="ex. https://atcoder.jp/contests/abc283/tasks/abc283_a"
                                         required
+                                        v-model="input.url"
                                     ></v-text-field>
                                 </v-col>
-                                
+
                                 <v-col cols="12">
                                     <v-text-field
                                         label="Username (optional)"
+                                        v-model="input.username"
                                     ></v-text-field>
                                 </v-col>
-                                
+
                                 <v-col cols="12">
                                     <v-textarea
                                         label="Reason"
                                         required
+                                        v-model="input.reason"
                                     ></v-textarea>
                                 </v-col>
 
@@ -69,23 +190,28 @@ const remove = (item) => {
                                         chips
                                         clearable
                                         label="Tags"
-                                        multiple  
+                                        multiple
                                     >
-                                        <template v-slot:selection="{ attrs, item, select, selected }">
+                                        <template
+                                            v-slot:selection="{
+                                                attrs,
+                                                item,
+                                                select,
+                                                selected,
+                                            }"
+                                        >
                                             <v-chip
                                                 v-bind="attrs"
                                                 :input-value="selected"
                                                 @click="select"
                                                 @click:close="remove(item)"
                                             >
-                                                <strong>{{ item }}</strong>&nbsp;
+                                                <strong>{{ item }}</strong>
                                             </v-chip>
                                         </template>
                                     </v-combobox>
                                 </v-col>
-                                <v-chip closable>
-                                    Chip
-                                </v-chip>
+                                <!-- <v-chip closable>Chip</v-chip> -->
                             </v-row>
                         </v-container>
                     </v-card-text>
@@ -101,12 +227,12 @@ const remove = (item) => {
                         <v-btn
                             color="blue-darken-1"
                             variant="text"
-                            @click="$emit('close')"
+                            @click="addProblem"
                         >
-                            Save
+                            Submit
                         </v-btn>
+                        <span v-if="input.success">送信成功！</span>
                     </v-card-actions>
-
                 </v-card>
             </div>
         </div>
