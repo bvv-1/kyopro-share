@@ -84,8 +84,33 @@ async function fetchDifficulty(problemId) {
     }
 }
 
+function validateUsername(username) {
+    if (username.length < 2) return "Error! Username is too short."
+    if (username.length > 16) return  "Error! Username is too long."
+    return null
+}
+
+function validateReason(reason) {
+    if (reason.length > 100) return "Error! Reason is too long."
+    return null
+}
+
 // AtCoder ProblemsのAPI叩いた結果をデータベースに登録する関数
 const addProblem = async () => {
+    const validateUsernameError = validateUsername(input.value.username)
+    console.log(validateUsernameError)
+    if (validateUsernameError != null) {
+        alert(validateUsernameError)
+        return
+    }
+
+    const validateReasonError = validateReason(input.value.reason)
+    console.log(validateReasonError)
+    if (validateReasonError != null) {
+        alert(validateReasonError)
+        return
+    }
+    
     const [contestId, problemId] = parseUrl(input.value.url)
     // 入力されたURLが適切でなければエラーを返す
     if (contestId === null || problemId === null) {
@@ -133,7 +158,8 @@ const addProblem = async () => {
     input.value.success = true
 }
 
-console.log(input)
+const limitUsernameLength = (value) => value.length <= 16 || "16文字以内で入力してください" // 文字数の制約
+// const limitReasonLength = (value) => value.length <= 100 || "100文字以内で入力してください" // 文字数の制約
 </script>
 
 <script>
@@ -171,6 +197,8 @@ export default {
                                     <v-text-field
                                         label="Username (optional)"
                                         v-model="input.username"
+                                        :rules="[limitUsernameLength]"
+                                        counter="16"
                                     ></v-text-field>
                                 </v-col>
 
@@ -178,7 +206,8 @@ export default {
                                     <v-textarea
                                         label="Reason"
                                         required
-                                        v-model="input.reason"
+                                        v-model="input.reason"    
+                                        counter="100"                                    
                                     ></v-textarea>
                                 </v-col>
 
