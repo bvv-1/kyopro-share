@@ -10,9 +10,6 @@ import Modal from "@/components/modal/MyModal.vue"
 // problems: データベースの中身そのまま持ってくる、登録した問題
 const problems = ref([])
 
-// 後で削除予定
-const tasks = ref([])
-const task = ref("")
 
 // カード表示のため、データベースの中身すべてproblemsに入れる
 const fetchProblems = async () => {
@@ -21,6 +18,10 @@ const fetchProblems = async () => {
     problems.value = data
 }
 fetchProblems()
+
+// 後で削除予定
+const tasks = ref([])
+const task = ref("")
 
 // 削除予定
 const getTasks = async () => {
@@ -115,14 +116,13 @@ const updateTask = async (task) => {
                                             :loading="loading"
                                             class="mx-auto my-auto"
                                             max-width="374"
+                                            height="374"
                                         >
                                             <v-container>
-                                                <v-row>
-                                                    <v-col>
+                                                <v-row align="center">
+                                                    <v-col cols="1">
                                                         <difficultyCircle
-                                                            :rating="
-                                                                problem.difficulty
-                                                            "
+                                                            :rating="problem.difficulty"
                                                         />
                                                     </v-col>
                                                     <v-col>
@@ -135,36 +135,32 @@ const updateTask = async (task) => {
                                                 </v-row>
 
                                                 <v-card-text>
-                                                    <v-row class="mx-0">
-                                                        <v-col>
-                                                            <v-rating
-                                                                :value="4.5"
-                                                                color="amber"
-                                                                dense
-                                                                half-increments
-                                                                readonly
-                                                                size="14"
-                                                            ></v-rating>
-                                                        </v-col>
-                                                        <v-col>
-                                                            by
-                                                            {{
-                                                                problem.username
-                                                            }}
-                                                        </v-col>
+                                                    <v-row>
+                                                        <v-rating
+                                                            :value="4.5"
+                                                            color="amber"
+                                                            dense
+                                                            half-increments
+                                                            readonly
+                                                            size="14"
+                                                        ></v-rating>
                                                     </v-row>
 
-                                                    <div
-                                                        class="my-4 text-subtitle-1"
-                                                    >
-                                                        {{
-                                                            problem.contest_id.toUpperCase()
-                                                        }}
-                                                        -
-                                                        {{
-                                                            problem.problem_index
-                                                        }}
-                                                    </div>
+                                                    <v-row align="center">
+                                                        <v-col class="ml-auto">
+                                                            <div class="my-4 text-subtitle-1" >
+                                                                {{ problem.contest_id.toUpperCase() }}
+                                                                -
+                                                                {{ problem.problem_index }}
+                                                            </div>
+                                                        </v-col>
+
+                                                        <v-col class="mr-auto">
+                                                            <div class="my-4 text-subtitle-1">
+                                                                by {{ problem.username }}
+                                                            </div>
+                                                        </v-col>
+                                                    </v-row>
 
                                                     <div>
                                                         {{ problem.reason }}
@@ -172,20 +168,20 @@ const updateTask = async (task) => {
                                                 </v-card-text>
 
                                                 <!-- 横線 -->
-                                                <v-divider
-                                                    class="mx-4"
-                                                ></v-divider>
+                                                <v-divider class="mx-4"></v-divider>
 
                                                 <!-- タグ付け -->
-                                                <v-chip-group
-                                                    v-model="selection"
-                                                    active-class="deep-purple accent-4 white--text"
-                                                    column
-                                                >
-                                                    <v-chip>#DP</v-chip>
-                                                    <v-chip>#BFS</v-chip>
-                                                    <v-chip>#Union-Find</v-chip>
-                                                </v-chip-group>
+                                                <!-- <v-card-text> -->
+                                                    <v-chip-group
+                                                        v-model="selection"
+                                                        active-class="deep-purple accent-4 white--text"
+                                                        column
+                                                    >
+                                                        <v-chip>#DP</v-chip>
+                                                        <v-chip>#BFS</v-chip>
+                                                        <!-- <v-chip>#Union-Find</v-chip> -->
+                                                    </v-chip-group>
+                                                <!-- </v-card-text> -->
 
                                                 <v-row>
                                                     <v-col>
