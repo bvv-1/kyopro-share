@@ -1,15 +1,29 @@
 <!-- javascriptを記述する場所 -->
 <script setup>
-import { ref } from "vue"
+import { ref, computed, watch } from "vue"
 import { supabase } from "../supabase.js"
 
 import HeaderComponent from "@/components/HeaderComponent.vue"
 import difficultyCircle from "@/components/difficultyCircle.vue"
-import Modal from "@/components/modal/MyModal.vue"
 
 // problems: データベースの中身そのまま持ってくる、登録した問題
 const problems = ref([])
 
+// Pythonと違って型によってsort法変えないといけないので条件分岐
+const sortStuff = (array, key) => {
+    if (typeof array[0][key] === "number") {
+        return array.sort((a, b) => a[key] - b[key])
+    } else {
+        return array.sort((a, b) => a[key].localeCompare(b[key]))
+    }
+}
+
+// sortKey: currentKeyに従ってsort
+const sortByKey = computed(() => (currentKey) => {
+    const sortedProblems = sortStuff(problems.value, currentKey)
+    console.log(sortedProblems)
+    return sortedProblems
+})
 
 // カード表示のため、データベースの中身すべてproblemsに入れる
 const fetchProblems = async () => {
@@ -65,6 +79,11 @@ const updateTask = async (task) => {
     const currentTask = tasks.value.find((task) => task.id === data[0].id)
     currentTask.completed = data[0].completed
 }
+
+const openProblem = (url) => {
+    console.log(url)
+    window.open(url, '_blank')
+}
 </script>
 
 <!-- マークアップでhtmlを記述する場所 -->
@@ -91,7 +110,13 @@ const updateTask = async (task) => {
                                 <v-divider class="my-2"></v-divider>
 
                                 <v-list-item link color="grey-lighten-4">
-                                    <v-list-item-title>Sort</v-list-item-title>
+                                    <v-list-item-title @click="sortByKey('difficulty')">Sort by Difficulty</v-list-item-title>
+                                </v-list-item>
+                                <v-list-item link color="grey-lighten-4">
+                                    <v-list-item-title @click="sortByKey('created_at')">Sort by Time</v-list-item-title>
+                                </v-list-item>
+                                <v-list-item link color="grey-lighten-4">
+                                    <v-list-item-title @click="sortByKey('username')">Sort by Username</v-list-item-title>
                                 </v-list-item>
                             </v-list>
                         </v-sheet>
@@ -190,7 +215,7 @@ const updateTask = async (task) => {
                                                             <v-btn
                                                                 color="deep-purple lighten-2"
                                                                 text
-                                                                @click="reserve"
+                                                                @click="openProblem(problem.url)"
                                                                 class="text-decoration-underline"
                                                             >
                                                                 Open Problem
