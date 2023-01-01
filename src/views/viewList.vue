@@ -84,6 +84,13 @@ const openProblem = (url) => {
     console.log(url)
     window.open(url, '_blank')
 }
+
+const inputSuccess = ref(false)
+
+// watch(emitの値, () => {
+//     if (emitがtrue) inputSuccess.value = true
+//     else inputSuccess.value = false
+// })
 </script>
 
 <!-- マークアップでhtmlを記述する場所 -->
@@ -94,6 +101,16 @@ const openProblem = (url) => {
     <v-app id="inspire">
         <v-main class="bg-grey-lighten-3">
             <!-- 検索窓とメインを分けるだけの目的 -->
+            <v-alert
+                density="comfortable"
+                type="success"
+                variant="tonal"
+                width="180px"
+                class="mx-auto"
+                v-if="inputSuccess === true"
+            >
+                Submitted!
+            </v-alert>
             <v-container>
                 <v-row>
                     <!-- 左の検索窓、タグや難易度によるソート機能を追加予定 -->
@@ -101,7 +118,7 @@ const openProblem = (url) => {
                         <v-sheet rounded="lg">
                             <!-- 変える部分 -->
                             <v-list rounded="lg">
-                                <v-list-item v-for="n in 5" :key="n" link>
+                                <v-list-item v-for="n in 2" :key="n" link>
                                     <v-list-item-title>
                                         List Item {{ n }}
                                     </v-list-item-title>
@@ -117,6 +134,9 @@ const openProblem = (url) => {
                                 </v-list-item>
                                 <v-list-item link color="grey-lighten-4">
                                     <v-list-item-title @click="sortByKey('username')">Sort by Username</v-list-item-title>
+                                </v-list-item>
+                                <v-list-item link color="grey-lighten-4">
+                                    <v-list-item-title @click="fetchProblems()">Reload</v-list-item-title>
                                 </v-list-item>
                             </v-list>
                         </v-sheet>
