@@ -179,7 +179,7 @@ export default {
             <div class="modal-wrapper">
                 <v-card class="modal-container">
                     <v-card-title>
-                        <span class="text-h5">User Profile</span>
+                        <span class="text-h5">Submit Problem</span>
                     </v-card-title>
                     <v-card-text>
                         <v-container>
@@ -256,11 +256,10 @@ export default {
                         <v-btn
                             color="blue-darken-1"
                             variant="text"
-                            @click="addProblem"
+                            @click="addProblem(); $emit('close')"
                         >
                             Submit
                         </v-btn>
-                        <span v-if="input.success">送信成功！</span>
                     </v-card-actions>
                 </v-card>
             </div>
