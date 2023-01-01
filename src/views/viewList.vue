@@ -84,6 +84,13 @@ const openProblem = (url) => {
     console.log(url)
     window.open(url, '_blank')
 }
+
+const inputSuccess = ref(false)
+
+// watch(emitの値, () => {
+//     if (emitがtrue) inputSuccess.value = true
+//     else inputSuccess.value = false
+// })
 </script>
 
 <!-- マークアップでhtmlを記述する場所 -->
@@ -100,6 +107,7 @@ const openProblem = (url) => {
                 variant="tonal"
                 width="180px"
                 class="mx-auto"
+                v-if="inputSuccess === true"
             >
                 Submitted!
             </v-alert>

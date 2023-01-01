@@ -26,6 +26,9 @@ const input = ref({
     success: false,
 })
 
+// eslint-disable-next-line
+const emit = defineEmits(["inputSuccess"])
+
 // 入力されたURLが有効であるか調べ、有効ならcontest番号と問題idを抜き出す関数
 // chatGPTで生成、有能すぎて...
 function parseUrl(url) {
