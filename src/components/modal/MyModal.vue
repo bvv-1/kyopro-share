@@ -165,17 +165,6 @@ const limitUsernameLength = (value) => value.length <= 16 || "16文字以内で�
 // const limitReasonLength = (value) => value.length <= 100 || "100文字以内で入力してください" // 文字数の制約
 </script>
 
-<script>
-export default {
-    data() {
-        return {
-            select: ["Vuetify", "Programming"],
-            items: ["Programming", "Design", "Vue", "Vuetify"],
-        }
-    },
-}
-</script>
-
 <template>
     <Transition name="modal">
         <div v-if="show" class="modal-mask">

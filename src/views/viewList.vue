@@ -245,15 +245,8 @@ const inputSuccess = ref(false)
                                                     <v-col>
                                                         <!-- 編集リクエストを送れるようにする予定 -->
                                                         <div class="my-2">
-                                                            <v-btn
-                                                                color="primary"
-                                                                fab
-                                                                small
-                                                                dark
-                                                            >
-                                                                <v-icon>
-                                                                    mdi-pencil
-                                                                </v-icon>
+                                                            <v-btn color="primary" fab small dark>
+                                                                <v-icon>mdi-pencil</v-icon>
                                                             </v-btn>
                                                         </div>
                                                     </v-col>
