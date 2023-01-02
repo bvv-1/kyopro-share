@@ -36,7 +36,7 @@ export default {
                     </template>
                 </modal>
             </Teleport>
-            <v-btn>Queue</v-btn>
+            <v-btn to="/queue">Queue</v-btn>
             
             <v-spacer></v-spacer>
 

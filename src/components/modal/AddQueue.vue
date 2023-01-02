@@ -6,45 +6,18 @@ import axios from "axios"
 // eslint-disable-next-line
 const props = defineProps({ show: Boolean })
 
-const items = ref([
-    "Programming",
-    "Playing video games",
-    "Watching movies",
-    "Sleeping",
-])
-const select = ref(["Streaming", "Eating"])
-
-const remove = (item) => {
-    select.value.splice(select.value.indexOf(item), 1)
-}
-
 // フォームに入力されたもの
 const input = ref({
     url: "",
     username: "Guest",
-    reason: "",
+    type: "",
+    new_reason: "",
+    purpose: "",
     success: false,
 })
 
 // eslint-disable-next-line
 const emit = defineEmits(["inputSuccess"])
-
-// 入力されたURLが有効であるか調べ、有効ならcontest番号と問題idを抜き出す関数
-// chatGPTで生成、有能すぎて...
-function parseUrl(url) {
-    const regex = /^https:\/\/atcoder\.jp\/contests\/(.+)\/tasks\/(.+)$/
-    const match = regex.exec(url)
-    if (match) {
-        const [, contest, task] = match
-        return [contest, task]
-    } else {
-        return [null, null]
-    }
-}
-// 使用例
-console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks/agc060_f")) // ['agc060', 'agc060_f']
-console.log(parseUrl("https://atcoder.jp/contests/contest1/tasks/task1")) // ['contest1', 'task1']
-console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks")) // null
 
 // AtCoder ProblemsのAPIを叩いて問題情報を得る関数
 async function fetchProblemInfo(problemId) {
@@ -62,25 +35,6 @@ async function fetchProblemInfo(problemId) {
 
         console.log(response.data[dataIndex])
         return response.data[dataIndex]
-    } catch (error) {
-        console.log(error)
-        return null
-    }
-}
-
-// AtCoder ProblemsのAPIを叩いて難易度情報を得る関数
-async function fetchDifficulty(problemId) {
-    const url = "https://kenkoooo.com/atcoder/resources/problem-models.json"
-    const params = JSON.stringify({
-        // image: image.value,
-    })
-
-    try {
-        const response = await axios.get(url)
-        console.log(response.data)
-
-        console.log(response.data[problemId].difficulty)
-        return response.data[problemId].difficulty
     } catch (error) {
         console.log(error)
         return null
@@ -113,33 +67,6 @@ const addProblem = async () => {
         alert(validateReasonError)
         return
     }
-    
-    const [contestId, problemId] = parseUrl(input.value.url)
-    // 入力されたURLが適切でなければエラーを返す
-    if (contestId === null || problemId === null) {
-        alert(
-            "Error! Invalid URL. Please put a valid problem URL. (ex. https://atcoder.jp/contests/abc999/tasks/abc999_x )"
-        )
-        return
-    }
-    console.log(contestId)
-    console.log(problemId)
-
-    const problemInfo = await fetchProblemInfo(problemId)
-    // 該当する問題がなければエラーを返す
-    if (problemInfo === null) {
-        alert("Error! Problem does not exist. Please put a valid problem URL.")
-        return
-    }
-    console.log(problemInfo)
-
-    const difficulty = await fetchDifficulty(problemId)
-    // 該当する問題がなければエラーを返す
-    if (difficulty === null) {
-        alert("Error! Problem does not exist. Please put a valid problem URL.")
-        return
-    }
-    console.log(difficulty)
 
     // データベースにinsert
     const { data, error } = await supabase
@@ -178,20 +105,32 @@ const limitUsernameLength = (value) => value.length <= 16 || "16文字以内で�
                             <v-row>
                                 <v-col cols="12">
                                     <v-text-field
-                                        label="Problem URL"
-                                        hint="ex. https://atcoder.jp/contests/abc283/tasks/abc283_a"
-                                        required
-                                        v-model="input.url"
-                                    ></v-text-field>
-                                </v-col>
-
-                                <v-col cols="12">
-                                    <v-text-field
                                         label="Username (optional)"
                                         v-model="input.username"
                                         :rules="[limitUsernameLength]"
                                         counter="16"
                                     ></v-text-field>
+                                </v-col>
+
+                                <v-col cols="12">
+                                    <!-- <v-text-field
+                                        label="Type"
+                                        v-model="input.type"
+                                        counter="16"
+                                    ></v-text-field> -->
+                                    <v-select
+                                        label="Type"
+                                        :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+                                    ></v-select>
+                                </v-col>
+
+                                <v-col cols="12" v-if="input.type === 'Edit'">
+                                    <!-- <v-select
+                                        label="Type"
+                                        v-model="input.type"
+                                        :items=""
+                                    ></v-select> -->
+                                    
                                 </v-col>
 
                                 <v-col cols="12">
@@ -202,37 +141,6 @@ const limitUsernameLength = (value) => value.length <= 16 || "16文字以内で�
                                         counter="100"                                    
                                     ></v-textarea>
                                 </v-col>
-
-                                <!-- タグ機能はあとで... -->
-                                <v-col cols="12">
-                                    <v-combobox
-                                        v-model="select"
-                                        :items="items"
-                                        chips
-                                        clearable
-                                        label="Tags"
-                                        multiple
-                                    >
-                                        <template
-                                            v-slot:selection="{
-                                                attrs,
-                                                item,
-                                                select,
-                                                selected,
-                                            }"
-                                        >
-                                            <v-chip
-                                                v-bind="attrs"
-                                                :input-value="selected"
-                                                @click="select"
-                                                @click:close="remove(item)"
-                                            >
-                                                <strong>{{ item }}</strong>
-                                            </v-chip>
-                                        </template>
-                                    </v-combobox>
-                                </v-col>
-                                <!-- <v-chip closable>Chip</v-chip> -->
                             </v-row>
                         </v-container>
                     </v-card-text>

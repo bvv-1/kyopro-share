@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router"
 // viewsのvueファイルにRouterする際は加える
 import indexView from "@/views/indexView.vue"
 import viewList from "@/views/viewList.vue"
+import viewQueue from "@/views/viewQueue.vue"
 
 const routes = [
     {
@@ -16,6 +17,12 @@ const routes = [
         path: "/",
         name: "viewList",
         component: viewList,
+    },
+    {
+        // ホーム画面、実質この1ページのみ
+        path: "/queue",
+        name: "viewQueue",
+        component: viewQueue,
     },
 ]
 

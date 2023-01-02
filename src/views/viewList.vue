@@ -5,6 +5,7 @@ import { supabase } from "../supabase.js"
 
 import HeaderComponent from "@/components/HeaderComponent.vue"
 import difficultyCircle from "@/components/difficultyCircle.vue"
+import AddQueue from "@/components/modal/AddQueue.vue"
 
 // problems: データベースの中身そのまま持ってくる、登録した問題
 const problems = ref([])
@@ -93,6 +94,20 @@ const inputSuccess = ref(false)
 // })
 </script>
 
+<!-- modal用 -->
+<script>
+export default {
+	components: {
+		AddQueue
+	},
+	data() {
+		return {
+			showModal: false
+		}
+	}
+}
+</script>
+
 <!-- マークアップでhtmlを記述する場所 -->
 <!-- vuetifyのワイヤーフレーム -->
 <template>
@@ -146,6 +161,16 @@ const inputSuccess = ref(false)
                     <v-col>
                         <v-sheet min-height="70vh" rounded="lg">
                             <!-- 変える部分 -->
+                            <v-container>
+                                <v-row>
+                                    <v-col>
+                                        <v-select
+                                            label="Type"
+                                            :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+                                        ></v-select>
+                                    </v-col>
+                                </v-row>
+                            </v-container>
                             <v-container>
                                 <v-row>
                                     <!-- 表示幅が短くなるとカードは1行3→2→1個 -->
@@ -245,15 +270,18 @@ const inputSuccess = ref(false)
                                                     <v-col>
                                                         <!-- 編集リクエストを送れるようにする予定 -->
                                                         <div class="my-2">
-                                                            <v-btn
-                                                                color="primary"
-                                                                fab
-                                                                small
-                                                                dark
-                                                            >
-                                                                <v-icon>
-                                                                    mdi-pencil
-                                                                </v-icon>
+                                                            <v-btn color="primary" fab small dark id="show-modal" @click="showModal = true">
+                                                                <v-icon>mdi-pencil</v-icon>
+                                                            
+                                                                <!-- <v-btn id="show-modal" @click="showModal = true">Submit</v-btn>		 -->
+                                                                <Teleport to="body">
+                                                                    <!-- use the modal component, pass in the prop -->
+                                                                    <AddQueue :show="showModal" @close="showModal = false">
+                                                                        <template #header>
+                                                                            <h3>Submit a new problem</h3>
+                                                                        </template>
+                                                                    </AddQueue>
+                                                                </Teleport>
                                                             </v-btn>
                                                         </div>
                                                     </v-col>
