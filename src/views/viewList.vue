@@ -87,11 +87,9 @@ const openProblem = (url) => {
 }
 
 const inputSuccess = ref(false)
-
-// watch(emitの値, () => {
-//     if (emitがtrue) inputSuccess.value = true
-//     else inputSuccess.value = false
-// })
+const setInputSuccess = (isok) => {
+    inputSuccess.value = isok
+}
 </script>
 
 <!-- modal用 -->
@@ -122,9 +120,19 @@ export default {
                 variant="tonal"
                 width="180px"
                 class="mx-auto"
-                v-if="inputSuccess === true"
+                v-if="inputSuccess"
             >
                 Submitted!
+            </v-alert>
+            <v-alert
+                density="comfortable"
+                type="success"
+                variant="tonal"
+                width="180px"
+                class="mx-auto"
+                v-else
+            >
+                not submitted!
             </v-alert>
             <v-container>
                 <v-row>
