@@ -73,10 +73,10 @@ const addProblem = async () => {
         .from("problems")
         .insert([
             {
-                contest_id: problemInfo.contest_id,
-                problem_index: problemInfo.problem_index,
-                problem_name: problemInfo.name,
-                difficulty: difficulty,
+                // contest_id: problemInfo.contest_id,
+                // problem_index: problemInfo.problem_index,
+                // problem_name: problemInfo.name,
+                // difficulty: difficulty,
                 username: input.value.username,
                 reason: input.value.reason,
                 // tag: ,

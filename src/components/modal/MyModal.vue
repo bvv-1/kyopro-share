@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue"
+import { ref, watch, watchEffect } from "vue"
 import { supabase } from "@/supabase.js"
 import axios from "axios"
 
@@ -25,9 +25,6 @@ const input = ref({
     reason: "",
     success: false,
 })
-
-// eslint-disable-next-line
-const emit = defineEmits(["inputSuccess"])
 
 // 入力されたURLが有効であるか調べ、有効ならcontest番号と問題idを抜き出す関数
 // chatGPTで生成、有能すぎて...
@@ -158,11 +155,30 @@ const addProblem = async () => {
         ])
         .select("*")
     console.log(error)
-    input.value.success = true
+    await setSuccessTrueForFiveSeconds()
 }
+
+async function setSuccessTrueForFiveSeconds() {
+    setTimeout(function() {
+        input.value.success = true
+    }, 5000)  // 5000 milliseconds = 5 seconds
+    if (input.value.success) console.log("success!")
+
+    input.value.success = false
+    console.log(input.value.success)
+}
+
 
 const limitUsernameLength = (value) => value.length <= 16 || "16文字以内で入力してください" // 文字数の制約
 // const limitReasonLength = (value) => value.length <= 100 || "100文字以内で入力してください" // 文字数の制約
+
+// eslint-disable-next-line
+const emit = defineEmits(["setInputSuccess"])
+
+watchEffect(() => {
+    emit("setInputSuccess", input.value.success)
+    console.log(input.value.success)
+})
 </script>
 
 <template>

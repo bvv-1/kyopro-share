@@ -12,7 +12,7 @@ const countUp = () => {
     count.value += 1
 }
 
-// 引数に関数を２つとる（１つ目はrefオブジェクトでも可）
+// 引数に関数を２つとる（１つ目はrefオブジェクトでも可、配列で渡すと複数入れられる）
 // watch(監視対象の関数, 実行したい処理)
 watch(count, () => {
     if (count.value<18) {console.log("選挙権はありません")}
