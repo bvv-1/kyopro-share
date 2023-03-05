@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint --fix"
+    "lint": "vue-cli-service lint --fix",
+    "format": "prettier --write .",
+    "fix": "npm run lint && npm run format"
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
