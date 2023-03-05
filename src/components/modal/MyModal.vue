@@ -6,9 +6,13 @@ import { ref, watch, watchEffect } from "vue"
 import { supabase } from "@/supabase.js"
 import axios from "axios"
 
+import infoJson from "@/assets/info.json"
+
 // eslint-disable-next-line
 const props = defineProps({ show: Boolean })
 
+// infoをなんとなくrefで定義し直す（いらないかも）
+const info = ref(infoJson)
 const items = ref(["Programming", "Playing video games", "Watching movies", "Sleeping"])
 const select = ref(["Streaming", "Eating"])
 
