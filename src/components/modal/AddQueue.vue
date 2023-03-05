@@ -111,23 +111,15 @@ const limitUsernameLength = (value) => value.length <= 16 || "16文字以内で�
                 </v-col>
 
                 <v-col cols="12">
-                  <!-- <v-text-field
-                                        label="Type"
-                                        v-model="input.type"
-                                        counter="16"
-                                    ></v-text-field> -->
-                  <v-select
+                  <v-text-field label="Type" v-model="input.type" counter="16"></v-text-field>
+                  <!-- <v-select
                     label="Type"
                     :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
-                  ></v-select>
+                  ></v-select> -->
                 </v-col>
 
                 <v-col cols="12" v-if="input.type === 'Edit'">
-                  <!-- <v-select
-                                        label="Type"
-                                        v-model="input.type"
-                                        :items=""
-                                    ></v-select> -->
+                  <!-- <v-select label="Type" v-model="input.type" :items=""></v-select> -->
                 </v-col>
 
                 <v-col cols="12">
@@ -139,16 +131,7 @@ const limitUsernameLength = (value) => value.length <= 16 || "16文字以内で�
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue-darken-1" variant="text" @click="$emit('close')">Close</v-btn>
-            <v-btn
-              color="blue-darken-1"
-              variant="text"
-              @click="
-                addProblem()
-                $emit('close')
-              "
-            >
-              Submit
-            </v-btn>
+            <v-btn color="blue-darken-1" variant="text" @click="addProblem(), $emit('close')">Submit</v-btn>
           </v-card-actions>
         </v-card>
       </div>

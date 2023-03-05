@@ -223,16 +223,7 @@ watchEffect(() => {
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue-darken-1" variant="text" @click="$emit('close')">Close</v-btn>
-            <v-btn
-              color="blue-darken-1"
-              variant="text"
-              @click="
-                addProblem()
-                $emit('close')
-              "
-            >
-              Submit
-            </v-btn>
+            <v-btn color="blue-darken-1" variant="text" @click="addProblem(), $emit('close')">Submit</v-btn>
           </v-card-actions>
         </v-card>
       </div>
