@@ -40,6 +40,7 @@
     "webpack-plugin-vuetify": "^2.0.0-alpha.0"
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix"
+    "**/*": "prettier --write --ignore-unknown",
+    "*.{vue,ts,tsx,js,jsx}": "vue-cli-service lint --fix"
   }
 }
