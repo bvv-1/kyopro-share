@@ -4,7 +4,7 @@ import { ref, computed, watch } from "vue"
 import { supabase } from "../supabase.js"
 
 import HeaderComponent from "@/components/HeaderComponent.vue"
-import difficultyCircle from "@/components/difficultyCircle.vue"
+import DifficultyCircle from "@/components/DifficultyCircle.vue"
 import AddQueue from "@/components/modal/AddQueue.vue"
 
 // problems: データベースの中身そのまま持ってくる、登録した問題
@@ -168,7 +168,7 @@ export default {
                       <v-container>
                         <v-row align="center">
                           <v-col cols="1">
-                            <difficultyCircle :rating="problem.difficulty" />
+                            <DifficultyCircle :rating="problem.difficulty" />
                           </v-col>
                           <v-col>
                             <v-card-title>

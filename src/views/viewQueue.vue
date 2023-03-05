@@ -4,7 +4,7 @@ import { ref, computed, watch } from "vue"
 import { supabase } from "../supabase.js"
 
 import HeaderComponent from "@/components/HeaderComponent.vue"
-import difficultyCircle from "@/components/difficultyCircle.vue"
+import difficultyCircle from "@/components/DifficultyCircle.vue"
 
 // problems: データベースの中身そのまま持ってくる、登録した問題
 const problems = ref([])
