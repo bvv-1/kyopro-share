@@ -86,8 +86,7 @@ const addProblem = async () => {
   input.value.success = true
 }
 
-const limitUsernameLength = (value) =>
-  value.length <= 16 || "16文字以内で入力してください" // 文字数の制約
+const limitUsernameLength = (value) => value.length <= 16 || "16文字以内で入力してください" // 文字数の制約
 // const limitReasonLength = (value) => value.length <= 100 || "100文字以内で入力してください" // 文字数の制約
 </script>
 
@@ -119,14 +118,7 @@ const limitUsernameLength = (value) =>
                                     ></v-text-field> -->
                   <v-select
                     label="Type"
-                    :items="[
-                      'California',
-                      'Colorado',
-                      'Florida',
-                      'Georgia',
-                      'Texas',
-                      'Wyoming',
-                    ]"
+                    :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
                   ></v-select>
                 </v-col>
 
@@ -139,21 +131,14 @@ const limitUsernameLength = (value) =>
                 </v-col>
 
                 <v-col cols="12">
-                  <v-textarea
-                    label="Reason"
-                    required
-                    v-model="input.reason"
-                    counter="100"
-                  ></v-textarea>
+                  <v-textarea label="Reason" required v-model="input.reason" counter="100"></v-textarea>
                 </v-col>
               </v-row>
             </v-container>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue-darken-1" variant="text" @click="$emit('close')">
-              Close
-            </v-btn>
+            <v-btn color="blue-darken-1" variant="text" @click="$emit('close')">Close</v-btn>
             <v-btn
               color="blue-darken-1"
               variant="text"

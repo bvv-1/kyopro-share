@@ -69,11 +69,7 @@ const addTask = async () => {
 
 // 削除予定
 const deleteTask = async (id) => {
-  const { data, error } = await supabase
-    .from("tasks")
-    .delete()
-    .eq("id", id)
-    .select("id")
+  const { data, error } = await supabase.from("tasks").delete().eq("id", id).select("id")
   console.log(error)
   const index = tasks.value.findIndex((task) => task.id === data[0].id)
   tasks.value.splice(index, 1)
@@ -136,24 +132,16 @@ const inputSuccess = ref(false)
                 <v-divider class="my-2"></v-divider>
 
                 <v-list-item link color="grey-lighten-4">
-                  <v-list-item-title @click="sortByKey('difficulty')">
-                    Sort by Difficulty
-                  </v-list-item-title>
+                  <v-list-item-title @click="sortByKey('difficulty')">Sort by Difficulty</v-list-item-title>
                 </v-list-item>
                 <v-list-item link color="grey-lighten-4">
-                  <v-list-item-title @click="sortByKey('created_at')">
-                    Sort by Time
-                  </v-list-item-title>
+                  <v-list-item-title @click="sortByKey('created_at')">Sort by Time</v-list-item-title>
                 </v-list-item>
                 <v-list-item link color="grey-lighten-4">
-                  <v-list-item-title @click="sortByKey('username')">
-                    Sort by Username
-                  </v-list-item-title>
+                  <v-list-item-title @click="sortByKey('username')">Sort by Username</v-list-item-title>
                 </v-list-item>
                 <v-list-item link color="grey-lighten-4">
-                  <v-list-item-title @click="fetchQueues()">
-                    Reload
-                  </v-list-item-title>
+                  <v-list-item-title @click="fetchQueues()">Reload</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-sheet>

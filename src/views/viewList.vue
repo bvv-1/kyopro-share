@@ -59,11 +59,7 @@ const addTask = async () => {
 
 // 削除予定
 const deleteTask = async (id) => {
-  const { data, error } = await supabase
-    .from("tasks")
-    .delete()
-    .eq("id", id)
-    .select("id")
+  const { data, error } = await supabase.from("tasks").delete().eq("id", id).select("id")
   console.log(error)
   const index = tasks.value.findIndex((task) => task.id === data[0].id)
   tasks.value.splice(index, 1)
@@ -114,24 +110,10 @@ export default {
   <v-app id="inspire">
     <v-main class="bg-grey-lighten-3">
       <!-- 検索窓とメインを分けるだけの目的 -->
-      <v-alert
-        density="comfortable"
-        type="success"
-        variant="tonal"
-        width="180px"
-        class="mx-auto"
-        v-if="inputSuccess"
-      >
+      <v-alert density="comfortable" type="success" variant="tonal" width="180px" class="mx-auto" v-if="inputSuccess">
         Submitted!
       </v-alert>
-      <v-alert
-        density="comfortable"
-        type="success"
-        variant="tonal"
-        width="180px"
-        class="mx-auto"
-        v-else
-      >
+      <v-alert density="comfortable" type="success" variant="tonal" width="180px" class="mx-auto" v-else>
         not submitted!
       </v-alert>
       <v-container>
@@ -148,24 +130,16 @@ export default {
                 <v-divider class="my-2"></v-divider>
 
                 <v-list-item link color="grey-lighten-4">
-                  <v-list-item-title @click="sortByKey('difficulty')">
-                    Sort by Difficulty
-                  </v-list-item-title>
+                  <v-list-item-title @click="sortByKey('difficulty')">Sort by Difficulty</v-list-item-title>
                 </v-list-item>
                 <v-list-item link color="grey-lighten-4">
-                  <v-list-item-title @click="sortByKey('created_at')">
-                    Sort by Time
-                  </v-list-item-title>
+                  <v-list-item-title @click="sortByKey('created_at')">Sort by Time</v-list-item-title>
                 </v-list-item>
                 <v-list-item link color="grey-lighten-4">
-                  <v-list-item-title @click="sortByKey('username')">
-                    Sort by Username
-                  </v-list-item-title>
+                  <v-list-item-title @click="sortByKey('username')">Sort by Username</v-list-item-title>
                 </v-list-item>
                 <v-list-item link color="grey-lighten-4">
-                  <v-list-item-title @click="fetchProblems()">
-                    Reload
-                  </v-list-item-title>
+                  <v-list-item-title @click="fetchProblems()">Reload</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-sheet>
@@ -180,14 +154,7 @@ export default {
                   <v-col>
                     <v-select
                       label="Type"
-                      :items="[
-                        'California',
-                        'Colorado',
-                        'Florida',
-                        'Georgia',
-                        'Texas',
-                        'Wyoming',
-                      ]"
+                      :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -195,20 +162,9 @@ export default {
               <v-container>
                 <v-row>
                   <!-- 表示幅が短くなるとカードは1行3→2→1個 -->
-                  <v-col
-                    cols="12"
-                    md="6"
-                    lg="4"
-                    v-for="problem in problems"
-                    :key="problem.id"
-                  >
+                  <v-col cols="12" md="6" lg="4" v-for="problem in problems" :key="problem.id">
                     <!-- ワイヤーフレームではmy-12だった -->
-                    <v-card
-                      :loading="loading"
-                      class="mx-auto my-auto"
-                      max-width="374"
-                      height="374"
-                    >
+                    <v-card :loading="loading" class="mx-auto my-auto" max-width="374" height="374">
                       <v-container>
                         <v-row align="center">
                           <v-col cols="1">
@@ -223,14 +179,7 @@ export default {
 
                         <v-card-text>
                           <v-row>
-                            <v-rating
-                              :value="4.5"
-                              color="amber"
-                              dense
-                              half-increments
-                              readonly
-                              size="14"
-                            ></v-rating>
+                            <v-rating :value="4.5" color="amber" dense half-increments readonly size="14"></v-rating>
                           </v-row>
 
                           <v-row align="center">
@@ -243,9 +192,7 @@ export default {
                             </v-col>
 
                             <v-col class="mr-auto">
-                              <div class="my-4 text-subtitle-1">
-                                by {{ problem.username }}
-                              </div>
+                              <div class="my-4 text-subtitle-1">by {{ problem.username }}</div>
                             </v-col>
                           </v-row>
 
@@ -259,11 +206,7 @@ export default {
 
                         <!-- タグ付け -->
                         <!-- <v-card-text> -->
-                        <v-chip-group
-                          v-model="selection"
-                          active-class="deep-purple accent-4 white--text"
-                          column
-                        >
+                        <v-chip-group v-model="selection" active-class="deep-purple accent-4 white--text" column>
                           <v-chip>#DP</v-chip>
                           <v-chip>#BFS</v-chip>
                           <!-- <v-chip>#Union-Find</v-chip> -->
@@ -287,23 +230,13 @@ export default {
                           <v-col>
                             <!-- 編集リクエストを送れるようにする予定 -->
                             <div class="my-2">
-                              <v-btn
-                                color="primary"
-                                fab
-                                small
-                                dark
-                                id="show-modal"
-                                @click="showModal = true"
-                              >
+                              <v-btn color="primary" fab small dark id="show-modal" @click="showModal = true">
                                 <v-icon>mdi-pencil</v-icon>
 
                                 <!-- <v-btn id="show-modal" @click="showModal = true">Submit</v-btn>		 -->
                                 <Teleport to="body">
                                   <!-- use the modal component, pass in the prop -->
-                                  <AddQueue
-                                    :show="showModal"
-                                    @close="showModal = false"
-                                  >
+                                  <AddQueue :show="showModal" @close="showModal = false">
                                     <template #header>
                                       <h3>Submit a new problem</h3>
                                     </template>

@@ -63,20 +63,15 @@ function getStyleOptions(color, fillRatio) {
     const colorCode = getRatingColorCode(color)
     return {
       borderColor: colorCode,
-      background: `border-box linear-gradient(to top, ${colorCode} ${
+      background: `border-box linear-gradient(to top, ${colorCode} ${fillRatio * 100}%, rgba(0,0,0,0) ${
         fillRatio * 100
-      }%, rgba(0,0,0,0) ${fillRatio * 100}%)`,
+      }%)`,
     }
   }
 }
 
 color.value = getColor(props.rating)
-const fillRatio =
-  props.rating >= 3200
-    ? 1.0
-    : props.rating < 0
-    ? 0.0
-    : (props.rating % 400) / 400
+const fillRatio = props.rating >= 3200 ? 1.0 : props.rating < 0 ? 0.0 : (props.rating % 400) / 400
 styleOptions.value = getStyleOptions(color.value, fillRatio)
 console.log(styleOptions.value)
 </script>

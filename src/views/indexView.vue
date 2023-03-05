@@ -34,9 +34,7 @@ const sortByKey = computed(() => (currentKey) => {
 <template>
   <div>good evening world</div>
   <ChildComponent />
-  <div v-for="problem in problems" :key="problem.id">
-    {{ problem.id }} - {{ problem.name }}
-  </div>
+  <div v-for="problem in problems" :key="problem.id">{{ problem.id }} - {{ problem.name }}</div>
   <v-btn @click="sortByKey('name')">sort by name!</v-btn>
   <v-btn @click="sortByKey('id')">sort by id!</v-btn>
   <v-btn @click="sort2">sort!!!!</v-btn>

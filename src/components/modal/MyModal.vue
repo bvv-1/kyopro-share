@@ -6,12 +6,7 @@ import axios from "axios"
 // eslint-disable-next-line
 const props = defineProps({ show: Boolean })
 
-const items = ref([
-  "Programming",
-  "Playing video games",
-  "Watching movies",
-  "Sleeping",
-])
+const items = ref(["Programming", "Playing video games", "Watching movies", "Sleeping"])
 const select = ref(["Streaming", "Eating"])
 
 const remove = (item) => {
@@ -166,8 +161,7 @@ async function setSuccessTrueForFiveSeconds() {
   console.log(input.value.success)
 }
 
-const limitUsernameLength = (value) =>
-  value.length <= 16 || "16文字以内で入力してください" // 文字数の制約
+const limitUsernameLength = (value) => value.length <= 16 || "16文字以内で入力してください" // 文字数の制約
 // const limitReasonLength = (value) => value.length <= 100 || "100文字以内で入力してください" // 文字数の制約
 
 // eslint-disable-next-line
@@ -209,33 +203,14 @@ watchEffect(() => {
                 </v-col>
 
                 <v-col cols="12">
-                  <v-textarea
-                    label="Reason"
-                    required
-                    v-model="input.reason"
-                    counter="100"
-                  ></v-textarea>
+                  <v-textarea label="Reason" required v-model="input.reason" counter="100"></v-textarea>
                 </v-col>
 
                 <!-- タグ機能はあとで... -->
                 <v-col cols="12">
-                  <v-combobox
-                    v-model="select"
-                    :items="items"
-                    chips
-                    clearable
-                    label="Tags"
-                    multiple
-                  >
-                    <template
-                      v-slot:selection="{ attrs, item, select, selected }"
-                    >
-                      <v-chip
-                        v-bind="attrs"
-                        :input-value="selected"
-                        @click="select"
-                        @click:close="remove(item)"
-                      >
+                  <v-combobox v-model="select" :items="items" chips clearable label="Tags" multiple>
+                    <template v-slot:selection="{ attrs, item, select, selected }">
+                      <v-chip v-bind="attrs" :input-value="selected" @click="select" @click:close="remove(item)">
                         <strong>{{ item }}</strong>
                       </v-chip>
                     </template>
@@ -247,9 +222,7 @@ watchEffect(() => {
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue-darken-1" variant="text" @click="$emit('close')">
-              Close
-            </v-btn>
+            <v-btn color="blue-darken-1" variant="text" @click="$emit('close')">Close</v-btn>
             <v-btn
               color="blue-darken-1"
               variant="text"
