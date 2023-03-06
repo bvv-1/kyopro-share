@@ -109,7 +109,7 @@ const onSubmit = async (values) => {
         difficulty: difficulty,
         username: values.username,
         reason: values.reason,
-        // tag: ,
+        tags: [values.tags],
         url: values.problemUrl,
       },
     ])
@@ -159,16 +159,36 @@ const onSubmit = async (values) => {
                 </v-col>
 
                 <!-- タグ機能はあとで... -->
-                <!-- <v-col cols="12">
-                  <v-combobox v-model="select" :items="items" chips clearable label="Tags" multiple>
-                      <template v-slot:selection="{ attrs, item, select, selected }">
-                        <v-chip v-bind="attrs" :input-value="selected" @click="select" @click:close="remove(item)">
-                          <strong>{{ item }}</strong>
-                        </v-chip>
-                      </template>
-                    </v-combobox>
+                <v-col cols="12">
+                  <Field name="tags" v-slot="{ field, errors }">
+                    <v-combobox
+                      v-bind="field"
+                      label="Tags"
+                      :error-messages="errors"
+                      :items="infoJson.tags"
+                    ></v-combobox>
+
+                    <!-- <v-combobox
+                      v-bind="field"
+                      label="allTags"
+                      :error-messages="errors"
+                      :items="infoJson.tags"
+                      chips
+                      multiple
+											clearable
+                    /> -->
+                    <!-- <v-col cols="12">
+											<v-combobox v-model="select" :items="items" chips clearable label="Tags" multiple>
+													<template v-slot:selection="{ attrs, item, select, selected }">
+														<v-chip v-bind="attrs" :input-value="selected" @click="select" @click:close="remove(item)">
+															<strong>{{ item }}</strong>
+														</v-chip>
+													</template>
+												</v-combobox>
+										</v-col>
+										<v-chip closable>Chip</v-chip> -->
+                  </Field>
                 </v-col>
-                <v-chip closable>Chip</v-chip> -->
 
                 <v-col cols="12">
                   <v-btn color="primary" class="mr-4" type="submit">Submit</v-btn>
@@ -176,26 +196,6 @@ const onSubmit = async (values) => {
               </v-row>
             </v-container>
           </Form>
-          <!-- <v-form @submit.prevent validate-on="">
-            <v-container>
-              <v-row>
-                タグ機能はあとで...
-                <v-col cols="12">
-                  <v-combobox v-model="select" :items="items" chips clearable label="Tags" multiple>
-                      <template v-slot:selection="{ attrs, item, select, selected }">
-                        <v-chip v-bind="attrs" :input-value="selected" @click="select" @click:close="remove(item)">
-                          <strong>{{ item }}</strong>
-                        </v-chip>
-                      </template>
-                    </v-combobox>
-                </v-col>
-                <v-chip closable>Chip</v-chip>
-              </v-row>
-            </v-container>
-
-            <v-btn color="blue-darken-1" variant="text" @click="$emit('close')">Close</v-btn>
-            <v-btn color="blue-darken-1" variant="text" @click="addProblem">Submit</v-btn>
-          </v-form> -->
         </v-sheet>
       </v-container>
     </v-main>
