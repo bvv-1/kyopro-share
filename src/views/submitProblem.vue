@@ -11,16 +11,70 @@ import axios from "axios"
 import infoJson from "@/assets/info.json"
 import HeaderComponent from "@/components/HeaderComponent.vue"
 
-// infoをなんとなくrefで定義し直す（いらないかも）
-const info = ref(infoJson)
-const inputUrl = ref("")
-
 const schema = yup.object({
   problemUrl: yup.string().required().url().label("Problem URL"),
   username: yup.string().max(16).label("Username"),
   reason: yup.string().max(100).required().label("Reason"),
 })
 
+// -------------------------------------------------
+// バリデーションに必要な関数
+// -------------------------------------------------
+// 入力されたURLが有効であるか調べ、有効ならcontest番号と問題idを抜き出す関数
+// chatGPTで生成、有能すぎて...
+const parseUrl = (url) => {
+  const regex = /^https:\/\/atcoder\.jp\/contests\/(.+)\/tasks\/(.+)$/
+  const match = regex.exec(url)
+  if (match) {
+    const [, contest, task] = match
+    return [contest, task]
+  } else {
+    return [null, null]
+  }
+}
+
+// AtCoder ProblemsのAPIを叩いて問題情報を得る関数
+const fetchProblemInfo = async (problemId) => {
+  const url = "https://kenkoooo.com/atcoder/resources/problems.json"
+
+  // ----------------------------------------
+  // 複数人が同時に実行したときに遅延かける処理を後日実装
+  // ----------------------------------------
+
+  try {
+    const response = await axios.get(url)
+    console.log(response.data)
+
+    const dataIndex = response.data.findIndex((data) => data.id === problemId)
+    if (dataIndex === -1) return null
+    console.log(dataIndex)
+
+    console.log(response.data[dataIndex])
+    return response.data[dataIndex]
+  } catch (error) {
+    console.log(error)
+    return null
+  }
+}
+
+// AtCoder ProblemsのAPIを叩いて難易度情報を得る関数
+const fetchDifficulty = async (problemId) => {
+  const url = "https://kenkoooo.com/atcoder/resources/problem-models.json"
+  try {
+    const response = await axios.get(url)
+    console.log(response.data)
+
+    console.log(response.data[problemId].difficulty)
+    return response.data[problemId].difficulty
+  } catch (error) {
+    console.log(error)
+    return null
+  }
+}
+
+// -------------------------------------------------
+// submit関連
+// -------------------------------------------------
 const onSubmit = async (values) => {
   console.log(values)
   const [contestId, problemId] = parseUrl(values.problemUrl)
@@ -61,95 +115,6 @@ const onSubmit = async (values) => {
     ])
     .select("*")
   console.log(error)
-}
-
-// const onSubmit = handleSubmit(() => {
-//   if (errors.value.any()) {
-//     return
-//   }
-//   alert(`名前: ${name.value}\nメールアドレス: ${email.value}`)
-// })
-
-// // useFormを使って入力要素の値を管理
-// const { handleSubmit, isSubmitting, submitCount } = useForm(
-//   {
-//     validationSchema: {
-//       url: {
-//         required: true,
-//       },
-//       username: {
-//         required: true,
-//       },
-//       reason: {
-//         required: true,
-//       },
-//     },
-//   },
-//   {
-//     initialValues: {
-//       url: "",
-//       username: "Guest",
-//       reason: "",
-//     },
-//   }
-// )
-
-// -------------------------------------------------
-// バリデーションに必要な関数
-// -------------------------------------------------
-// 入力されたURLが有効であるか調べ、有効ならcontest番号と問題idを抜き出す関数
-// chatGPTで生成、有能すぎて...
-const parseUrl = (url) => {
-  const regex = /^https:\/\/atcoder\.jp\/contests\/(.+)\/tasks\/(.+)$/
-  const match = regex.exec(url)
-  if (match) {
-    const [, contest, task] = match
-    return [contest, task]
-  } else {
-    return [null, null]
-  }
-}
-
-// -------------------------------------------------
-// submit関連
-// -------------------------------------------------
-// AtCoder ProblemsのAPIを叩いて問題情報を得る関数
-const fetchProblemInfo = async (problemId) => {
-  const url = "https://kenkoooo.com/atcoder/resources/problems.json"
-
-  // ----------------------------------------
-  // 複数人が同時に実行したときに遅延かける処理を後日実装
-  // ----------------------------------------
-
-  try {
-    const response = await axios.get(url)
-    console.log(response.data)
-
-    const dataIndex = response.data.findIndex((data) => data.id === problemId)
-    if (dataIndex === -1) return null
-    console.log(dataIndex)
-
-    console.log(response.data[dataIndex])
-    return response.data[dataIndex]
-  } catch (error) {
-    console.log(error)
-    return null
-  }
-}
-
-// AtCoder ProblemsのAPIを叩いて難易度情報を得る関数
-const fetchDifficulty = async (problemId) => {
-  const url = "https://kenkoooo.com/atcoder/resources/problem-models.json"
-  try {
-    const response = await axios.get(url)
-    console.log(response.data)
-
-    console.log(response.data[problemId].difficulty)
-    return response.data[problemId].difficulty
-  } catch (error) {
-    console.log(error)
-    return null
-  }
 }
 </script>
 
