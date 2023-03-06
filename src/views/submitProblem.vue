@@ -9,20 +9,19 @@ import axios from "axios"
 
 import infoJson from "@/assets/info.json"
 import HeaderComponent from "@/components/HeaderComponent.vue"
-// import TextFieldWithValidation from "@/components/TextFieldWithValidation.vue"
 
 // infoをなんとなくrefで定義し直す（いらないかも）
 const info = ref(infoJson)
 const inputUrl = ref("")
 
 const schema = yup.object({
-  name: yup.string().required().label("Name"),
-  // email: yup.string().email().required().label("E-mail"),
-  // terms: yup.boolean().required().oneOf([true], "You must agree to terms and conditions"),
+  problemUrl: yup.string().required().url().label("Problem URL"),
+  username: yup.string().max(16).label("Username"),
+  reason: yup.string().max(100).required().label("Reason"),
 })
 
 const onSubmit = (values) => {
-  alert(values.name)
+  alert(values.username)
 }
 
 // const onSubmit = handleSubmit(() => {
@@ -180,7 +179,8 @@ const fetchDifficulty = async (problemId) => {
 </script>
 
 <!------------------------------------------
-  modal用
+  Reactでいうreturnの部分
+  Vuetifyのワイヤーフレーム
 ------------------------------------------->
 <template>
   <HeaderComponent />
@@ -192,67 +192,53 @@ const fetchDifficulty = async (problemId) => {
         <v-sheet min-height="70vh" rounded="lg">
           <span class="text-h5">Submit Problem</span>
 
-          <v-container>
-            <Form as="v-form" :validation-schema="schema" @submit="onSubmit">
-              <!-- This method uses Higher-order component API to validate vuetify inputs -->
-              <Field name="name" v-slot="{ field, errors }">
-                <v-text-field v-bind="field" label="Name" :error-messages="errors" />
-              </Field>
-
-              <!-- This uses a custom component with the composition API -->
-              <!-- <TextFieldWithValidation name="email" label="Email" type="email" /> -->
-
-              <!-- This uses a custom component with the composition API -->
-              <!-- <TextFieldWithValidation name="password" label="Password" type="password" /> -->
-
-              <!-- This uses a custom component with the composition API -->
-              <!-- <TextFieldWithValidation
-      name="passwordConfirm"
-      label="Password Confirmation"
-      type="password"
-    /> -->
-
-              <!-- Same thing for other types of components -->
-              <!-- In case of checkboxes you need to explicitly bind the model events -->
-              <!-- With composition it is easier since you can use the `v-model` API directly -->
-              <!-- <Field name="terms" :value="true" type="checkbox" v-slot="{ value, handleChange, errors }">
-                <v-checkbox
-                  :model-value="value"
-                  @update:modelValue="handleChange"
-                  label="Do you agree?"
-                  color="primary"
-                  :error-messages="errors"
-                />
-              </Field> -->
-
-              <v-btn color="primary" class="mr-4" type="submit">Submit</v-btn>
-            </Form>
-          </v-container>
-          <!-- <v-form @submit.prevent validate-on="">
+          <Form as="v-form" :validation-schema="schema" @submit="onSubmit">
             <v-container>
               <v-row>
                 <v-col cols="12">
-                  <v-text-field
-										name="url"
-                    label="Problem URL"
-                    v-model="url"
-                    hint="ex. https://atcoder.jp/contests/abc283/tasks/abc283_a"
-                    required
-                  />
-                  {{ errorMessageUrl }}
-									<ErrorMessage name="url"/>
+                  <Field name="problemUrl" v-slot="{ field, errors }">
+                    <v-text-field
+                      v-bind="field"
+                      label="Problem URL"
+                      :error-messages="errors"
+                      hint="ex. https://atcoder.jp/contests/abc283/tasks/abc283_a"
+                    />
+                  </Field>
                 </v-col>
 
                 <v-col cols="12">
-                  <v-text-field label="Username (optional)" v-model="username" counter="16" />
-                  {{ errorMessageUsername }}
+                  <Field name="username" v-slot="{ field, errors }">
+                    <v-text-field v-bind="field" label="Username (optional)" :error-messages="errors" />
+                  </Field>
                 </v-col>
 
                 <v-col cols="12">
-                  <v-textarea label="Reason" v-model="reason" counter="100" required />
-                  {{ errorMessageReason }}
+                  <Field name="reason" v-slot="{ field, errors }">
+                    <v-textarea v-bind="field" label="Reason" :error-messages="errors" />
+                  </Field>
                 </v-col>
 
+                <!-- タグ機能はあとで... -->
+                <!-- <v-col cols="12">
+                  <v-combobox v-model="select" :items="items" chips clearable label="Tags" multiple>
+                      <template v-slot:selection="{ attrs, item, select, selected }">
+                        <v-chip v-bind="attrs" :input-value="selected" @click="select" @click:close="remove(item)">
+                          <strong>{{ item }}</strong>
+                        </v-chip>
+                      </template>
+                    </v-combobox>
+                </v-col>
+                <v-chip closable>Chip</v-chip> -->
+
+                <v-col cols="12">
+                  <v-btn color="primary" class="mr-4" type="submit">Submit</v-btn>
+                </v-col>
+              </v-row>
+            </v-container>
+          </Form>
+          <!-- <v-form @submit.prevent validate-on="">
+            <v-container>
+              <v-row>
                 タグ機能はあとで...
                 <v-col cols="12">
                   <v-combobox v-model="select" :items="items" chips clearable label="Tags" multiple>
