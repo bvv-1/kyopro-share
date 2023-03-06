@@ -5,6 +5,7 @@
 import { ref } from "vue"
 import { Field, Form } from "vee-validate"
 import * as yup from "yup"
+import { supabase } from "@/supabase.js"
 import axios from "axios"
 
 import infoJson from "@/assets/info.json"
@@ -20,8 +21,46 @@ const schema = yup.object({
   reason: yup.string().max(100).required().label("Reason"),
 })
 
-const onSubmit = (values) => {
-  alert(values.username)
+const onSubmit = async (values) => {
+  console.log(values)
+  const [contestId, problemId] = parseUrl(values.problemUrl)
+  console.log(`contestId: ${contestId}\nproblemId: ${problemId}`)
+  // バリデーションに失敗したら何もしない
+  if (contestId === null || problemId === null) {
+    alert(
+      "Error! Invalid URL. Please put a valid problem URL. (ex. https://atcoder.jp/contests/abc999/tasks/abc999_x )"
+    )
+    return
+  }
+
+  // 分割代入かつPromise.allで並列処理
+  const [problemInfo, difficulty] = await Promise.all([fetchProblemInfo(problemId), fetchDifficulty(problemId)])
+  console.log(`problemInfo: ${problemInfo}\ndifficulty: ${difficulty}`)
+  // バリデーションに失敗したら何もしない
+  if (problemInfo === null || difficulty === null) {
+    alert(
+      "Error! Invalid URL. Please put a valid problem URL. (ex. https://atcoder.jp/contests/abc999/tasks/abc999_x )"
+    )
+    return
+  }
+
+  // バリデーションを通過したらデータベースにinsert
+  const { data, error } = await supabase
+    .from("problems")
+    .insert([
+      {
+        contest_id: problemInfo.contest_id,
+        problem_index: problemInfo.problem_index,
+        problem_name: problemInfo.name,
+        difficulty: difficulty,
+        username: values.username,
+        reason: values.reason,
+        // tag: ,
+        url: values.problemUrl,
+      },
+    ])
+    .select("*")
+  console.log(error)
 }
 
 // const onSubmit = handleSubmit(() => {
@@ -72,39 +111,6 @@ const parseUrl = (url) => {
 }
 
 // -------------------------------------------------
-// vee-validateのuseFieldを使ってフォームの入力要素を定義
-// 同時にバリデーションも行う
-// -------------------------------------------------
-// const { value: url, errorMessage: errorMessageUrl } = useField("url", async (url) => {
-//   const [contestId, problemId] = parseUrl(url)
-//   // 入力されたURLが適切でなければエラーを返す
-//   if (contestId === null || problemId === null) {
-//     return "Error! Invalid URL. Please put a valid problem URL. (ex. https://atcoder.jp/contests/abc999/tasks/abc999_x )"
-//   } else {
-//     inputUrl.value = url
-//     return true
-//   }
-// })
-
-// const { value: username, errorMessage: errorMessageUsername } = useField("username", (username) => {
-//   if (username.length < 2) {
-//     return "Error! Username is too short."
-//   } else if (username.length > 16) {
-//     return "Error! Username is too long."
-//   } else {
-//     return true
-//   }
-// })
-
-// const { value: reason, errorMessage: errorMessageReason } = useField("reason", (reason) => {
-//   if (reason.length > 100) {
-//     return "Error! Reason is too long."
-//   } else {
-//     return true
-//   }
-// })
-
-// -------------------------------------------------
 // submit関連
 // -------------------------------------------------
 // AtCoder ProblemsのAPIを叩いて問題情報を得る関数
@@ -145,37 +151,6 @@ const fetchDifficulty = async (problemId) => {
     return null
   }
 }
-
-// submitボタンを押したときに実行される関数
-// const addProblem = async () => {
-//   // バリデーションを行う
-//   const [contestId, problemId] = parseUrl(inputUrl.value)
-
-//   // 分割代入かつPromise.allで並列処理
-//   const [problemInfo, difficulty] = await Promise.all([fetchProblemInfo(problemId), fetchDifficulty(problemId)])
-
-//   // バリデーションに失敗したら何もしない
-//   if (problemInfo === null || difficulty === null) return
-
-//   // バリデーションに成功したら、submitする
-//   const submitData = {
-//     url: url.value,
-//     username: username.value,
-//     reason: reason.value,
-//     problemInfo: problemInfo,
-//     difficulty: difficulty,
-//   }
-//   console.log(submitData)
-
-//   // submitする
-//   const url = "https://us-central1-atcoder-problems-2f0c7.cloudfunctions.net/submitProblem"
-//   try {
-//     const response = await axios.post(url, submitData)
-//     console.log(response)
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
 </script>
 
 <!------------------------------------------
