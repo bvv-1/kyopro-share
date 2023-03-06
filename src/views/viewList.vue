@@ -7,7 +7,6 @@ import { supabase } from "../supabase.js"
 
 import HeaderComponent from "@/components/HeaderComponent.vue"
 import DifficultyCircle from "@/components/DifficultyCircle.vue"
-import AddQueue from "@/components/modal/AddQueue.vue"
 
 // problems: データベースの中身そのまま持ってくる、登録した問題
 const problems = ref([])
@@ -22,7 +21,6 @@ const sortStuff = (array, key) => {
   }
 }
 
-// ????
 // sortKey: currentKeyに従ってsort
 const sortByKey = computed(() => (currentKey) => {
   const sortedProblems = sortStuff(problems.value, currentKey)
@@ -37,6 +35,11 @@ const fetchProblems = async () => {
   problems.value = data
 }
 fetchProblems()
+
+// ボタンを押したらその問題のURLを開く
+const openProblem = (url) => {
+  window.open(url, "_blank")
+}
 
 // ----------------------------------------------
 // 後で削除予定
@@ -85,34 +88,6 @@ fetchProblems()
 // ----------------------------------------------
 // 後で削除予定
 // ----------------------------------------------
-
-// ボタンを押したらその問題のURLを開く
-const openProblem = (url) => {
-  console.log(url)
-  window.open(url, "_blank")
-}
-
-// useStateみたいな書き方
-const inputSuccess = ref(false)
-const setInputSuccess = (isok) => {
-  inputSuccess.value = isok
-}
-</script>
-
-<!------------------------------------------
-  modal用
-------------------------------------------->
-<script>
-export default {
-  components: {
-    AddQueue,
-  },
-  data() {
-    return {
-      showModal: false,
-    }
-  },
-}
 </script>
 
 <!------------------------------------------
@@ -125,12 +100,6 @@ export default {
   <v-app id="inspire">
     <v-main class="bg-grey-lighten-3">
       <!-- 検索窓とメインを分けるだけの目的 -->
-      <v-alert density="comfortable" type="success" variant="tonal" width="180px" class="mx-auto" v-if="inputSuccess">
-        Submitted!
-      </v-alert>
-      <v-alert density="comfortable" type="success" variant="tonal" width="180px" class="mx-auto" v-else>
-        not submitted!
-      </v-alert>
       <v-container>
         <v-row>
           <!-- 左の検索窓、タグや難易度によるソート機能を追加予定 -->
@@ -245,18 +214,8 @@ export default {
                           <v-col>
                             <!-- 編集リクエストを送れるようにする予定 -->
                             <div class="my-2">
-                              <v-btn color="primary" fab small dark id="show-modal" @click="showModal = true">
-                                <v-icon>mdi-pencil</v-icon>
-
-                                <!-- <v-btn id="show-modal" @click="showModal = true">Submit</v-btn>		 -->
-                                <Teleport to="body">
-                                  <!-- use the modal component, pass in the prop -->
-                                  <AddQueue :show="showModal" @close="showModal = false">
-                                    <template #header>
-                                      <h3>Submit a new problem</h3>
-                                    </template>
-                                  </AddQueue>
-                                </Teleport>
+                              <v-btn color="primary">
+                                <v-icon icon="mdi-pencil" />
                               </v-btn>
                             </div>
                           </v-col>
