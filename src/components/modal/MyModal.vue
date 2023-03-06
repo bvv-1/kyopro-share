@@ -2,32 +2,30 @@
   javascriptの部分
 ------------------------------------------->
 <script setup>
-import { ref, watch, watchEffect } from "vue"
+import { ref } from "vue"
 import { supabase } from "@/supabase.js"
 import axios from "axios"
+import { Field, Form } from "vee-validate"
+import * as yup from "yup"
 
 import infoJson from "@/assets/info.json"
 
 // eslint-disable-next-line
 const props = defineProps({ show: Boolean })
 
-// infoをなんとなくrefで定義し直す（いらないかも）
-const info = ref(infoJson)
-const items = ref(["Programming", "Playing video games", "Watching movies", "Sleeping"])
-const select = ref(["Streaming", "Eating"])
+// const remove = (item) => {
+//   select.value.splice(select.value.indexOf(item), 1)
+// }
 
-const remove = (item) => {
-  select.value.splice(select.value.indexOf(item), 1)
-}
-
-// フォームに入力されたもの
-const input = ref({
-  url: "",
-  username: "Guest",
-  reason: "",
-  success: false,
+const schema = yup.object({
+  problemUrl: yup.string().required().url().label("Problem URL"),
+  username: yup.string().max(16).label("Username"),
+  reason: yup.string().max(100).required().label("Reason"),
 })
 
+// -------------------------------------------------
+// バリデーションに必要な関数
+// -------------------------------------------------
 // 入力されたURLが有効であるか調べ、有効ならcontest番号と問題idを抜き出す関数
 // chatGPTで生成、有能すぎて...
 const parseUrl = (url) => {
@@ -40,13 +38,9 @@ const parseUrl = (url) => {
     return [null, null]
   }
 }
-// 使用例
-// console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks/agc060_f")) // ['agc060', 'agc060_f']
-// console.log(parseUrl("https://atcoder.jp/contests/contest1/tasks/task1")) // ['contest1', 'task1']
-// console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks")) // null
 
 // AtCoder ProblemsのAPIを叩いて問題情報を得る関数
-async function fetchProblemInfo(problemId) {
+const fetchProblemInfo = async (problemId) => {
   const url = "https://kenkoooo.com/atcoder/resources/problems.json"
 
   // ----------------------------------------
@@ -70,12 +64,8 @@ async function fetchProblemInfo(problemId) {
 }
 
 // AtCoder ProblemsのAPIを叩いて難易度情報を得る関数
-async function fetchDifficulty(problemId) {
+const fetchDifficulty = async (problemId) => {
   const url = "https://kenkoooo.com/atcoder/resources/problem-models.json"
-  const params = JSON.stringify({
-    // image: image.value,
-  })
-
   try {
     const response = await axios.get(url)
     console.log(response.data)
@@ -88,67 +78,33 @@ async function fetchDifficulty(problemId) {
   }
 }
 
-// ユーザーネームの長さをチェックする関数
-const validateUsername = (username) => {
-  if (username.length < 2) return "Error! Username is too short."
-  if (username.length > 16) return "Error! Username is too long."
-  return null
-}
-
-// 理由の長さをチェックする関数
-const validateReason = (reason) => {
-  if (reason.length > 100) return "Error! Reason is too long."
-  return null
-}
-
-// ユーザーネームの長さをチェックする関数
-const limitUsernameLength = (value) => value.length <= 16 || "16文字以内で入力してください" // 文字数の制約
-// const limitReasonLength = (value) => value.length <= 100 || "100文字以内で入力してください" // 文字数の制約
-
-// AtCoder ProblemsのAPI叩いた結果をデータベースに登録する関数
-const addProblem = async () => {
-  const validateUsernameError = validateUsername(input.value.username)
-  console.log(validateUsernameError)
-  if (validateUsernameError != null) {
-    alert(validateUsernameError)
-    return
-  }
-
-  const validateReasonError = validateReason(input.value.reason)
-  console.log(validateReasonError)
-  if (validateReasonError != null) {
-    alert(validateReasonError)
-    return
-  }
-
-  const [contestId, problemId] = parseUrl(input.value.url)
-  // 入力されたURLが適切でなければエラーを返す
+// -------------------------------------------------
+// submit関連
+// -------------------------------------------------
+const onSubmit = async (values) => {
+  console.log(values)
+  const [contestId, problemId] = parseUrl(values.problemUrl)
+  console.log(`contestId: ${contestId}\nproblemId: ${problemId}`)
+  // バリデーションに失敗したら何もしない
   if (contestId === null || problemId === null) {
     alert(
       "Error! Invalid URL. Please put a valid problem URL. (ex. https://atcoder.jp/contests/abc999/tasks/abc999_x )"
     )
     return
   }
-  console.log(contestId)
-  console.log(problemId)
 
-  const problemInfo = await fetchProblemInfo(problemId)
-  // 該当する問題がなければエラーを返す
-  if (problemInfo === null) {
-    alert("Error! Problem does not exist. Please put a valid problem URL.")
+  // 分割代入かつPromise.allで並列処理
+  const [problemInfo, difficulty] = await Promise.all([fetchProblemInfo(problemId), fetchDifficulty(problemId)])
+  console.log(`problemInfo: ${problemInfo}\ndifficulty: ${difficulty}`)
+  // バリデーションに失敗したら何もしない
+  if (problemInfo === null || difficulty === null) {
+    alert(
+      "Error! Invalid URL. Please put a valid problem URL. (ex. https://atcoder.jp/contests/abc999/tasks/abc999_x )"
+    )
     return
   }
-  console.log(problemInfo)
 
-  const difficulty = await fetchDifficulty(problemId)
-  // 該当する問題がなければエラーを返す
-  if (difficulty === null) {
-    alert("Error! Problem does not exist. Please put a valid problem URL.")
-    return
-  }
-  console.log(difficulty)
-
-  // データベースにinsert
+  // バリデーションを通過したらデータベースにinsert
   const { data, error } = await supabase
     .from("problems")
     .insert([
@@ -157,15 +113,14 @@ const addProblem = async () => {
         problem_index: problemInfo.problem_index,
         problem_name: problemInfo.name,
         difficulty: difficulty,
-        username: input.value.username,
-        reason: input.value.reason,
-        // tag: ,
-        url: input.value.url,
+        username: values.username,
+        reason: values.reason,
+        tags: [values.tags],
+        url: values.problemUrl,
       },
     ])
     .select("*")
   console.log(error)
-  // await setSuccessTrueForFiveSeconds()
 }
 
 // ----------------------------------------
@@ -201,50 +156,74 @@ const addProblem = async () => {
           <v-card-title>
             <span class="text-h5">Submit Problem</span>
           </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col cols="12">
-                  <v-text-field
-                    label="Problem URL"
-                    hint="ex. https://atcoder.jp/contests/abc283/tasks/abc283_a"
-                    required
-                    v-model="input.url"
-                  ></v-text-field>
-                </v-col>
 
-                <v-col cols="12">
-                  <v-text-field
-                    label="Username (optional)"
-                    v-model="input.username"
-                    :rules="[limitUsernameLength]"
-                    counter="16"
-                  ></v-text-field>
-                </v-col>
+          <Form as="v-form" :validation-schema="schema" @submit="onSubmit">
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <Field name="problemUrl" v-slot="{ field, errors }">
+                      <v-text-field
+                        v-bind="field"
+                        label="Problem URL"
+                        :error-messages="errors"
+                        hint="ex. https://atcoder.jp/contests/abc283/tasks/abc283_a"
+                      />
+                    </Field>
+                  </v-col>
 
-                <v-col cols="12">
-                  <v-textarea label="Reason" required v-model="input.reason" counter="100"></v-textarea>
-                </v-col>
+                  <v-col cols="12">
+                    <Field name="username" v-slot="{ field, errors }">
+                      <v-text-field v-bind="field" label="Username (optional)" :error-messages="errors" />
+                    </Field>
+                  </v-col>
 
-                <!-- タグ機能はあとで... -->
-                <v-col cols="12">
-                  <v-combobox v-model="select" :items="items" chips clearable label="Tags" multiple>
-                    <template v-slot:selection="{ attrs, item, select, selected }">
-                      <v-chip v-bind="attrs" :input-value="selected" @click="select" @click:close="remove(item)">
-                        <strong>{{ item }}</strong>
-                      </v-chip>
-                    </template>
-                  </v-combobox>
-                </v-col>
-                <!-- <v-chip closable>Chip</v-chip> -->
-              </v-row>
-            </v-container>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue-darken-1" variant="text" @click="$emit('close')">Close</v-btn>
-            <v-btn color="blue-darken-1" variant="text" @click="addProblem(), $emit('close')">Submit</v-btn>
-          </v-card-actions>
+                  <v-col cols="12">
+                    <Field name="reason" v-slot="{ field, errors }">
+                      <v-textarea v-bind="field" label="Reason" :error-messages="errors" />
+                    </Field>
+                  </v-col>
+
+                  <!-- タグ機能はあとで... -->
+                  <v-col cols="12">
+                    <Field name="tags" v-slot="{ field, errors }">
+                      <v-combobox
+                        v-bind="field"
+                        label="Tags"
+                        :error-messages="errors"
+                        :items="infoJson.tags"
+                      ></v-combobox>
+
+                      <!-- <v-combobox
+                      v-bind="field"
+                      label="allTags"
+                      :error-messages="errors"
+                      :items="infoJson.tags"
+                      chips
+                      multiple
+											clearable
+                    /> -->
+                      <!-- <v-col cols="12">
+											<v-combobox v-model="select" :items="items" chips clearable label="Tags" multiple>
+													<template v-slot:selection="{ attrs, item, select, selected }">
+														<v-chip v-bind="attrs" :input-value="selected" @click="select" @click:close="remove(item)">
+															<strong>{{ item }}</strong>
+														</v-chip>
+													</template>
+												</v-combobox>
+										</v-col>
+										<v-chip closable>Chip</v-chip> -->
+                    </Field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" class="mr-4" @click="$emit('close')">Close</v-btn>
+              <v-btn color="primary" class="mr-4" type="submit">Submit</v-btn>
+            </v-card-actions>
+          </Form>
         </v-card>
       </div>
     </div>
