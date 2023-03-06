@@ -165,7 +165,7 @@ const addProblem = async () => {
     ])
     .select("*")
   console.log(error)
-  await setSuccessTrueForFiveSeconds()
+  // await setSuccessTrueForFiveSeconds()
 }
 
 // ----------------------------------------

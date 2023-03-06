@@ -12,7 +12,7 @@
     "setup:env": "cp .env.example .env.local"
   },
   "dependencies": {
-    "@mdi/font": "5.9.55",
+    "@mdi/font": "^7.1.96",
     "@supabase/supabase-js": "^2.2.2",
     "axios": "^1.2.1",
     "core-js": "^3.8.3",

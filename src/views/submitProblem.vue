@@ -9,7 +9,7 @@ import axios from "axios"
 
 import infoJson from "@/assets/info.json"
 import HeaderComponent from "@/components/HeaderComponent.vue"
-import TextFieldWithValidation from "@/components/TextFieldWithValidation.vue"
+// import TextFieldWithValidation from "@/components/TextFieldWithValidation.vue"
 
 // infoをなんとなくrefで定義し直す（いらないかも）
 const info = ref(infoJson)
@@ -17,13 +17,12 @@ const inputUrl = ref("")
 
 const schema = yup.object({
   name: yup.string().required().label("Name"),
-  email: yup.string().email().required().label("E-mail"),
+  // email: yup.string().email().required().label("E-mail"),
   // terms: yup.boolean().required().oneOf([true], "You must agree to terms and conditions"),
 })
 
-function onSubmit(values) {
-  alert("aa")
-  console.log("Submitted with", values)
+const onSubmit = (values) => {
+  alert(values.name)
 }
 
 // const onSubmit = handleSubmit(() => {
@@ -201,7 +200,7 @@ const fetchDifficulty = async (problemId) => {
               </Field>
 
               <!-- This uses a custom component with the composition API -->
-              <TextFieldWithValidation name="email" label="Email" type="email" />
+              <!-- <TextFieldWithValidation name="email" label="Email" type="email" /> -->
 
               <!-- This uses a custom component with the composition API -->
               <!-- <TextFieldWithValidation name="password" label="Password" type="password" /> -->
@@ -216,7 +215,7 @@ const fetchDifficulty = async (problemId) => {
               <!-- Same thing for other types of components -->
               <!-- In case of checkboxes you need to explicitly bind the model events -->
               <!-- With composition it is easier since you can use the `v-model` API directly -->
-              <Field name="terms" :value="true" type="checkbox" v-slot="{ value, handleChange, errors }">
+              <!-- <Field name="terms" :value="true" type="checkbox" v-slot="{ value, handleChange, errors }">
                 <v-checkbox
                   :model-value="value"
                   @update:modelValue="handleChange"
@@ -224,7 +223,7 @@ const fetchDifficulty = async (problemId) => {
                   color="primary"
                   :error-messages="errors"
                 />
-              </Field>
+              </Field> -->
 
               <v-btn color="primary" class="mr-4" type="submit">Submit</v-btn>
             </Form>
