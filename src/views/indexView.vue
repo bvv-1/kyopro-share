@@ -1,4 +1,4 @@
-<!-- javascriptを記述する場所 -->
+<!-- javascriptを記述する場所
 <script setup>
 // setupをつけるとコードが見やすくなる
 import ChildComponent from "@/components/ChildComponent.vue"
@@ -30,7 +30,7 @@ const sortByKey = computed(() => (currentKey) => {
 })
 </script>
 
-<!-- マークアップでhtmlを記述する場所 -->
+マークアップでhtmlを記述する場所
 <template>
   <div>good evening world</div>
   <ChildComponent />
@@ -38,4 +38,27 @@ const sortByKey = computed(() => (currentKey) => {
   <v-btn @click="sortByKey('name')">sort by name!</v-btn>
   <v-btn @click="sortByKey('id')">sort by id!</v-btn>
   <v-btn @click="sort2">sort!!!!</v-btn>
+</template> -->
+
+<script setup>
+import { Field, Form } from "vee-validate"
+import * as yup from "yup"
+
+const schema = yup.object({
+  name: yup.string().required().label("Name"),
+})
+
+const onSubmit = (values) => {
+  alert(values.name)
+}
+</script>
+
+<template>
+  <Form as="v-form" :validation-schema="schema" @submit="onSubmit">
+    <Field name="name" v-slot="{ field, errors }">
+      <v-text-field v-bind="field" label="Name" :error-messages="errors" />
+    </Field>
+
+    <v-btn color="primary" class="mr-4" type="submit">Submit</v-btn>
+  </Form>
 </template>

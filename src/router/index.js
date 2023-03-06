@@ -4,6 +4,7 @@ import { createRouter, createWebHashHistory } from "vue-router"
 import indexView from "@/views/indexView.vue"
 import viewList from "@/views/viewList.vue"
 import viewQueue from "@/views/viewQueue.vue"
+import submitProblem from "@/views/submitProblem.vue"
 
 const routes = [
   {
@@ -19,10 +20,16 @@ const routes = [
     component: viewList,
   },
   {
-    // ホーム画面、実質この1ページのみ
+    // 編集依頼のキュー画面
     path: "/queue",
     name: "viewQueue",
     component: viewQueue,
+  },
+  {
+    // submit画面
+    path: "/submit",
+    name: "submitProblem",
+    component: submitProblem,
   },
 ]
 

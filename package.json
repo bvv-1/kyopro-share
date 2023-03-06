@@ -12,16 +12,18 @@
     "setup:env": "cp .env.example .env.local"
   },
   "dependencies": {
-    "@mdi/font": "5.9.55",
+    "@mdi/font": "^7.1.96",
     "@supabase/supabase-js": "^2.2.2",
     "axios": "^1.2.1",
     "core-js": "^3.8.3",
     "roboto-fontface": "*",
+    "vee-validate": "^4.5.8",
     "vite": "^4.0.3",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuetify": "^3.0.0-beta.0",
-    "webfontloader": "^1.0.0"
+    "webfontloader": "^1.0.0",
+    "yup": "^1.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

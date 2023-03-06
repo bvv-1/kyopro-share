@@ -1,11 +1,18 @@
+<!------------------------------------------
+  javascriptの部分
+------------------------------------------->
 <script setup>
 import { ref, watch, watchEffect } from "vue"
 import { supabase } from "@/supabase.js"
 import axios from "axios"
 
+import infoJson from "@/assets/info.json"
+
 // eslint-disable-next-line
 const props = defineProps({ show: Boolean })
 
+// infoをなんとなくrefで定義し直す（いらないかも）
+const info = ref(infoJson)
 const items = ref(["Programming", "Playing video games", "Watching movies", "Sleeping"])
 const select = ref(["Streaming", "Eating"])
 
@@ -23,7 +30,7 @@ const input = ref({
 
 // 入力されたURLが有効であるか調べ、有効ならcontest番号と問題idを抜き出す関数
 // chatGPTで生成、有能すぎて...
-function parseUrl(url) {
+const parseUrl = (url) => {
   const regex = /^https:\/\/atcoder\.jp\/contests\/(.+)\/tasks\/(.+)$/
   const match = regex.exec(url)
   if (match) {
@@ -34,13 +41,17 @@ function parseUrl(url) {
   }
 }
 // 使用例
-console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks/agc060_f")) // ['agc060', 'agc060_f']
-console.log(parseUrl("https://atcoder.jp/contests/contest1/tasks/task1")) // ['contest1', 'task1']
-console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks")) // null
+// console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks/agc060_f")) // ['agc060', 'agc060_f']
+// console.log(parseUrl("https://atcoder.jp/contests/contest1/tasks/task1")) // ['contest1', 'task1']
+// console.log(parseUrl("https://atcoder.jp/contests/agc060/tasks")) // null
 
 // AtCoder ProblemsのAPIを叩いて問題情報を得る関数
 async function fetchProblemInfo(problemId) {
   const url = "https://kenkoooo.com/atcoder/resources/problems.json"
+
+  // ----------------------------------------
+  // 複数人が同時に実行したときに遅延かける処理を後日実装
+  // ----------------------------------------
 
   try {
     const response = await axios.get(url)
@@ -77,16 +88,22 @@ async function fetchDifficulty(problemId) {
   }
 }
 
-function validateUsername(username) {
+// ユーザーネームの長さをチェックする関数
+const validateUsername = (username) => {
   if (username.length < 2) return "Error! Username is too short."
   if (username.length > 16) return "Error! Username is too long."
   return null
 }
 
-function validateReason(reason) {
+// 理由の長さをチェックする関数
+const validateReason = (reason) => {
   if (reason.length > 100) return "Error! Reason is too long."
   return null
 }
+
+// ユーザーネームの長さをチェックする関数
+const limitUsernameLength = (value) => value.length <= 16 || "16文字以内で入力してください" // 文字数の制約
+// const limitReasonLength = (value) => value.length <= 100 || "100文字以内で入力してください" // 文字数の制約
 
 // AtCoder ProblemsのAPI叩いた結果をデータベースに登録する関数
 const addProblem = async () => {
@@ -148,31 +165,34 @@ const addProblem = async () => {
     ])
     .select("*")
   console.log(error)
-  await setSuccessTrueForFiveSeconds()
+  // await setSuccessTrueForFiveSeconds()
 }
 
-async function setSuccessTrueForFiveSeconds() {
-  setTimeout(function () {
-    input.value.success = true
-  }, 5000) // 5000 milliseconds = 5 seconds
-  if (input.value.success) console.log("success!")
+// ----------------------------------------
+// input.value.successをon/offしてsubmitted!を表示
+// ----------------------------------------
+// async function setSuccessTrueForFiveSeconds() {
+//   setTimeout(function () {
+//     input.value.success = true
+//   }, 5000) // 5000 milliseconds = 5 seconds
+//   if (input.value.success) console.log("success!")
 
-  input.value.success = false
-  console.log(input.value.success)
-}
+//   input.value.success = false
+//   console.log(input.value.success)
+// }
 
-const limitUsernameLength = (value) => value.length <= 16 || "16文字以内で入力してください" // 文字数の制約
-// const limitReasonLength = (value) => value.length <= 100 || "100文字以内で入力してください" // 文字数の制約
+// // eslint-disable-next-line
+// const emit = defineEmits(["setInputSuccess"])
 
-// eslint-disable-next-line
-const emit = defineEmits(["setInputSuccess"])
-
-watchEffect(() => {
-  emit("setInputSuccess", input.value.success)
-  console.log(input.value.success)
-})
+// watchEffect(() => {
+//   emit("setInputSuccess", input.value.success)
+//   console.log(input.value.success)
+// })
 </script>
 
+<!------------------------------------------
+  Reactでいうreturnの部分
+------------------------------------------->
 <template>
   <Transition name="modal">
     <div v-if="show" class="modal-mask">
