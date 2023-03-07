@@ -7,9 +7,10 @@ import pic_tags_submit from "@/assets/tags_submit.jpg"
 
 <template>
   <HeaderComponent />
+
   <v-app id="inspire">
     <v-main class="bg-grey-lighten-3">
-      <v-container fluid>
+      <v-container>
         <v-row>
           <v-col cols="12" align="center" justify="center">
             <v-sheet rounded="lg" maxWidth="1200px" class="pa-8">
@@ -44,7 +45,7 @@ import pic_tags_submit from "@/assets/tags_submit.jpg"
                     <h4 class="text-h6 ml-8 my-8"><b>良問を登録する</b></h4>
                     <p>上部のタブから SUBMIT を選択します。</p>
                     <p>必要な情報を入力したら、SUBMIT ボタンを押します。</p>
-                    <p>タグとして、問題に関係のある単語を0〜3個つけることができます。</p>
+                    <p>タグとして、問題に関係のある単語を1〜3個つけることができます。</p>
                   </div>
                   <v-img
                     :src="pic_tags_submit"

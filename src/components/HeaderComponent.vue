@@ -1,11 +1,12 @@
-<script setup></script>
+<script setup>
+import pic_icon from "@/assets/icon.png"
+</script>
 
 <template>
   <v-app-bar flat>
     <v-container class="fill-height d-flex align-center">
       <v-avatar class="mr-10 ml-4" color="grey-darken-1" size="32">
-        <!-- <img src="@/assets/icon.png" /> -->
-        <img src="https://bvv.s-ul.eu/DmVCALiV" />
+        <v-img :src="pic_icon"></v-img>
       </v-avatar>
 
       <v-btn to="about">About</v-btn>

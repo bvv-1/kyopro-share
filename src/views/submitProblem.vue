@@ -5,7 +5,7 @@
 import { ref } from "vue"
 import { Field, Form } from "vee-validate"
 import * as yup from "yup"
-import { supabase } from "@/supabase.js"
+import { supabase } from "../supabase.js"
 import axios from "axios"
 
 import infoJson from "@/assets/info.json"
@@ -83,8 +83,12 @@ const fetchDifficulty = async (problemId) => {
 const onSubmit = async (values, { resetForm }) => {
   console.log(values)
 
-  if (selected.value.length > 3) {
+  if (selected.value.length >= 4) {
     alert("Error! Please select <4 tags.")
+    return
+  }
+  if (selected.value.length === 0) {
+    alert("Error! Please select at least 1 tag.")
     return
   }
 
@@ -132,11 +136,11 @@ const onSubmit = async (values, { resetForm }) => {
     resetForm()
     selected.value = []
 
-    // turn on inputSuccess for 5 seconds
+    // turn on inputSuccess for 1 second
     inputSuccess.value = true
     setTimeout(() => {
       inputSuccess.value = false
-    }, 5000)
+    }, 1000)
   }
 }
 </script>

@@ -36,5 +36,6 @@
     "2-sat",
     "chinese remainder theorem",
     "schedules"
-  ]
+  ],
+  "types": ["Update", "Delete", "Other"]
 }

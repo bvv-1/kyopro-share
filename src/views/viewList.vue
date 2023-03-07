@@ -2,7 +2,7 @@
   javascriptの部分
 ------------------------------------------->
 <script setup>
-import { ref, computed, watch } from "vue"
+import { ref, computed } from "vue"
 import { supabase } from "../supabase.js"
 
 import HeaderComponent from "@/components/HeaderComponent.vue"
@@ -14,6 +14,10 @@ const problems = ref([])
 // sortStuff: あらゆるものをsortする関数
 // Pythonと違って型によってsort法変えないといけないので条件分岐
 const sortStuff = (array, key) => {
+  // 例外処理
+  if (array.length === 0) {
+    return array
+  }
   if (typeof array[0][key] === "number") {
     return array.sort((a, b) => a[key] - b[key])
   } else {
@@ -23,14 +27,13 @@ const sortStuff = (array, key) => {
 
 // sortKey: currentKeyに従ってsort
 const sortByKey = computed(() => (currentKey) => {
-  const sortedProblems = sortStuff(problems.value, currentKey)
-  console.log(sortedProblems)
-  return sortedProblems
+  console.log(currentKey)
+  problems.value = sortStuff(problems.value, currentKey)
 })
 
 // problemsテーブルの中身をすべてproblemsに入れる
 const fetchProblems = async () => {
-  let { data, error, status } = await supabase.from("problems").select("*")
+  const { data, error } = await supabase.from("problems").select("*")
   console.log(error)
   problems.value = data
 }
@@ -90,7 +93,7 @@ const openProblem = (url) => {
                   <!-- 表示幅が短くなるとカードは1行3→2→1個 -->
                   <v-col cols="12" md="6" lg="4" v-for="problem in problems" :key="problem.id">
                     <!-- ワイヤーフレームではmy-12だった -->
-                    <v-card :loading="loading" class="mx-auto my-auto" max-width="374" height="374">
+                    <v-card class="mx-auto my-auto" max-width="374" height="374">
                       <v-container>
                         <v-row align="center">
                           <v-col cols="1">
@@ -132,7 +135,7 @@ const openProblem = (url) => {
 
                         <!-- タグ付け -->
                         <!-- <v-card-text> -->
-                        <v-chip-group v-model="selection" active-class="deep-purple accent-4 white--text" column>
+                        <v-chip-group active-class="deep-purple accent-4 white--text" column>
                           <v-chip>#DP</v-chip>
                           <v-chip>#BFS</v-chip>
                           <!-- <v-chip>#Union-Find</v-chip> -->
@@ -156,7 +159,7 @@ const openProblem = (url) => {
                           <v-col>
                             <!-- 編集リクエストを送れるようにする予定 -->
                             <div class="my-2">
-                              <v-btn color="primary">
+                              <v-btn color="primary" to="/edit">
                                 <v-icon icon="mdi-pencil" />
                               </v-btn>
                             </div>
