@@ -121,7 +121,7 @@ const openProblem = (url) => {
             <v-sheet min-height="70vh" rounded="lg">
               <!-- 変える部分 -->
               <v-list rounded="lg">
-                <v-table>
+                <v-table class="px-4">
                   <thead>
                     <tr>
                       <th class="text-left">Time</th>
