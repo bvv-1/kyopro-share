@@ -11,10 +11,15 @@ import axios from "axios"
 import infoJson from "@/assets/info.json"
 import HeaderComponent from "@/components/HeaderComponent.vue"
 
+// 選択したタグ
+const selected = ref([])
+const inputSuccess = ref(false)
+
 const schema = yup.object({
   problemUrl: yup.string().required().url().label("Problem URL"),
   username: yup.string().max(16).label("Username"),
   reason: yup.string().max(100).required().label("Reason"),
+  // tags: yup.array().of(yup.string()),
 })
 
 // -------------------------------------------------
@@ -75,8 +80,14 @@ const fetchDifficulty = async (problemId) => {
 // -------------------------------------------------
 // submit関連
 // -------------------------------------------------
-const onSubmit = async (values) => {
+const onSubmit = async (values, { resetForm }) => {
   console.log(values)
+
+  if (selected.value.length > 3) {
+    alert("Error! Please select <4 tags.")
+    return
+  }
+
   const [contestId, problemId] = parseUrl(values.problemUrl)
   console.log(`contestId: ${contestId}\nproblemId: ${problemId}`)
   // バリデーションに失敗したら何もしない
@@ -109,12 +120,24 @@ const onSubmit = async (values) => {
         difficulty: difficulty,
         username: values.username,
         reason: values.reason,
-        tags: [values.tags],
+        tags: selected.value,
         url: values.problemUrl,
       },
     ])
     .select("*")
-  console.log(error)
+
+  if (error !== null) {
+    alert(error)
+  } else {
+    resetForm()
+    selected.value = []
+
+    // turn on inputSuccess for 5 seconds
+    inputSuccess.value = true
+    setTimeout(() => {
+      inputSuccess.value = false
+    }, 5000)
+  }
 }
 </script>
 
@@ -127,76 +150,78 @@ const onSubmit = async (values) => {
 
   <v-app id="inspire">
     <v-main class="bg-grey-lighten-3">
-      <!-- 検索窓とメインを分けるだけの目的 -->
-      <v-container>
-        <v-sheet min-height="70vh" rounded="lg">
-          <span class="text-h5">Submit Problem</span>
+      <v-container fluid>
+        <v-row>
+          <v-col cols="12" align="center" justify="center">
+            <v-sheet rounded="lg" maxWidth="1200px" class="pa-8">
+              <h1 class="text-h5 pa-3"><b>Submit Problem</b></h1>
+              <Form as="v-form" :validation-schema="schema" @submit="onSubmit">
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <Field name="problemUrl" v-slot="{ field, errors }">
+                        <v-text-field
+                          v-bind="field"
+                          label="Problem URL"
+                          :error-messages="errors"
+                          hint="ex. https://atcoder.jp/contests/abc283/tasks/abc283_a"
+                        />
+                      </Field>
+                    </v-col>
 
-          <Form as="v-form" :validation-schema="schema" @submit="onSubmit">
-            <v-container>
-              <v-row>
-                <v-col cols="12">
-                  <Field name="problemUrl" v-slot="{ field, errors }">
-                    <v-text-field
-                      v-bind="field"
-                      label="Problem URL"
-                      :error-messages="errors"
-                      hint="ex. https://atcoder.jp/contests/abc283/tasks/abc283_a"
-                    />
-                  </Field>
-                </v-col>
+                    <v-col cols="12">
+                      <Field name="username" v-slot="{ field, errors }">
+                        <v-text-field v-bind="field" label="Username (optional)" :error-messages="errors" />
+                      </Field>
+                    </v-col>
 
-                <v-col cols="12">
-                  <Field name="username" v-slot="{ field, errors }">
-                    <v-text-field v-bind="field" label="Username (optional)" :error-messages="errors" />
-                  </Field>
-                </v-col>
+                    <v-col cols="12">
+                      <Field name="reason" v-slot="{ field, errors }">
+                        <v-textarea v-bind="field" label="Reason" :error-messages="errors" />
+                      </Field>
+                    </v-col>
 
-                <v-col cols="12">
-                  <Field name="reason" v-slot="{ field, errors }">
-                    <v-textarea v-bind="field" label="Reason" :error-messages="errors" />
-                  </Field>
-                </v-col>
+                    <!-- タグ機能 -->
+                    <v-col cols="12">
+                      <v-container class="text-left">
+                        <v-row dense>
+                          <Field name="tags" type="checkbox" v-slot="{ value, handleChange, errors }">
+                            <v-col v-for="(tag, index) in infoJson.tags" :key="index" :cols="2">
+                              <v-checkbox
+                                :model-value="value"
+                                @update:modelValue="handleChange"
+                                :label="tag"
+                                :value="tag"
+                                color="primary"
+                                v-model="selected"
+                              />
+                            </v-col>
+                            <span v-if="errors.length" class="error">{{ errors[0] }}</span>
+                          </Field>
+                        </v-row>
+                        <!-- {{ selected }} -->
+                      </v-container>
+                    </v-col>
 
-                <!-- タグ機能はあとで... -->
-                <v-col cols="12">
-                  <Field name="tags" v-slot="{ field, errors }">
-                    <v-combobox
-                      v-bind="field"
-                      label="Tags"
-                      :error-messages="errors"
-                      :items="infoJson.tags"
-                    ></v-combobox>
-
-                    <!-- <v-combobox
-                      v-bind="field"
-                      label="allTags"
-                      :error-messages="errors"
-                      :items="infoJson.tags"
-                      chips
-                      multiple
-											clearable
-                    /> -->
-                    <!-- <v-col cols="12">
-											<v-combobox v-model="select" :items="items" chips clearable label="Tags" multiple>
-													<template v-slot:selection="{ attrs, item, select, selected }">
-														<v-chip v-bind="attrs" :input-value="selected" @click="select" @click:close="remove(item)">
-															<strong>{{ item }}</strong>
-														</v-chip>
-													</template>
-												</v-combobox>
-										</v-col>
-										<v-chip closable>Chip</v-chip> -->
-                  </Field>
-                </v-col>
-
-                <v-col cols="12">
-                  <v-btn color="primary" class="mr-4" type="submit">Submit</v-btn>
-                </v-col>
-              </v-row>
-            </v-container>
-          </Form>
-        </v-sheet>
+                    <v-col cols="12">
+                      <v-btn color="primary" type="submit">Submit</v-btn>
+                    </v-col>
+                    <v-alert
+                      density="comfortable"
+                      type="success"
+                      variant="tonal"
+                      width="180px"
+                      class="mx-auto"
+                      v-if="inputSuccess"
+                    >
+                      Submitted!
+                    </v-alert>
+                  </v-row>
+                </v-container>
+              </Form>
+            </v-sheet>
+          </v-col>
+        </v-row>
       </v-container>
     </v-main>
   </v-app>

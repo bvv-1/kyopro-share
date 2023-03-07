@@ -15,7 +15,7 @@ const routes = [
     component: indexView,
   },
   {
-    // About
+    // 遊び方
     path: "/about",
     name: "viewAbout",
     component: viewAbout,

@@ -88,6 +88,18 @@ const openProblem = (url) => {
 // ----------------------------------------------
 // 後で削除予定
 // ----------------------------------------------
+
+// ボタンを押したらその問題のURLを開く
+const openProblem = (url) => {
+  console.log(url)
+  window.open(url, "_blank")
+}
+
+// useStateみたいな書き方
+const inputSuccess = ref(false)
+const setInputSuccess = (isok) => {
+  inputSuccess.value = isok
+}
 </script>
 
 <!------------------------------------------
