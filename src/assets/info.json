@@ -37,5 +37,19 @@
     "chinese remainder theorem",
     "schedules"
   ],
-  "types": ["Update", "Delete", "Other"]
+  "types": ["Update", "Delete", "Other"],
+  "ratingColors": [
+    "Black",
+    "Grey",
+    "Brown",
+    "Green",
+    "Cyan",
+    "Blue",
+    "Yellow",
+    "Orange",
+    "Red",
+    "Bronze",
+    "Silver",
+    "Gold"
+  ]
 }

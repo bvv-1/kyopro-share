@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from "vue"
 
+import infoJson from "@/assets/info.json"
+
 // eslint-disable-next-line
 const props = defineProps({ rating: Number })
 // console.log(props)
@@ -8,28 +10,13 @@ const props = defineProps({ rating: Number })
 const color = ref("")
 const styleOptions = ref({})
 
-const RatingColors = [
-  "Black",
-  "Grey",
-  "Brown",
-  "Green",
-  "Cyan",
-  "Blue",
-  "Yellow",
-  "Orange",
-  "Red",
-  "Bronze",
-  "Silver",
-  "Gold",
-]
-
-function getColor(rating) {
+const getColor = (rating) => {
   if (rating < 0) return "Grey"
-  const index = Math.min(Math.floor(rating / 400), RatingColors.length - 2)
-  return RatingColors[index + 1]
+  const index = Math.min(Math.floor(rating / 400), infoJson.ratingColors.length - 2)
+  return infoJson.ratingColors[index + 1]
 }
 
-function getRatingColorCode(color) {
+const getRatingColorCode = (color) => {
   if (color === "Black") return "#404040"
   else if (color === "Grey") return "#808080"
   else if (color === "Brown") return "#804000"
@@ -50,7 +37,7 @@ function getRatingColorCode(color) {
   }
 }
 
-function getStyleOptions(color, fillRatio) {
+const getStyleOptions = (color, fillRatio) => {
   if (color === "Bronze" || color === "Silver" || color === "Gold") {
     const metalColor = getRatingColorCode(color)
     return {
@@ -83,7 +70,7 @@ styleOptions.value = getStyleOptions(color.value, fillRatio)
   display: inline-block;
   border-radius: 50%;
   border-style: solid;
-  border-width: 1px;
+  border-width: 2px;
   margin-right: 5px;
   height: 30px;
   width: 30px;
