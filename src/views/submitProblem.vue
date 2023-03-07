@@ -154,7 +154,7 @@ const onSubmit = async (values, { resetForm }) => {
         <v-row>
           <v-col cols="12" align="center" justify="center">
             <v-sheet rounded="lg" maxWidth="1200px" class="pa-8">
-              <h1 class="text-h5 pa-3"><b>Submit Problem</b></h1>
+              <h2 class="text-h4 pa-4">Submit Problem</h2>
               <Form as="v-form" :validation-schema="schema" @submit="onSubmit">
                 <v-container>
                   <v-row>

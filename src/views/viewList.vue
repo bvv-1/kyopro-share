@@ -87,16 +87,6 @@ const openProblem = (url) => {
               <!-- 変える部分 -->
               <v-container>
                 <v-row>
-                  <v-col>
-                    <v-select
-                      label="Type"
-                      :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
-                    ></v-select>
-                  </v-col>
-                </v-row>
-              </v-container>
-              <v-container>
-                <v-row>
                   <!-- 表示幅が短くなるとカードは1行3→2→1個 -->
                   <v-col cols="12" md="6" lg="4" v-for="problem in problems" :key="problem.id">
                     <!-- ワイヤーフレームではmy-12だった -->
