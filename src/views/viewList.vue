@@ -93,7 +93,7 @@ const openProblem = (url) => {
                   <!-- 表示幅が短くなるとカードは1行3→2→1個 -->
                   <v-col cols="12" md="6" lg="4" v-for="problem in problems" :key="problem.id">
                     <!-- ワイヤーフレームではmy-12だった -->
-                    <v-card :loading="loading" class="mx-auto my-auto" max-width="374" height="374">
+                    <v-card class="mx-auto my-auto" max-width="374" height="374">
                       <v-container>
                         <v-row align="center">
                           <v-col cols="1">
@@ -135,7 +135,7 @@ const openProblem = (url) => {
 
                         <!-- タグ付け -->
                         <!-- <v-card-text> -->
-                        <v-chip-group v-model="selection" active-class="deep-purple accent-4 white--text" column>
+                        <v-chip-group active-class="deep-purple accent-4 white--text" column>
                           <v-chip>#DP</v-chip>
                           <v-chip>#BFS</v-chip>
                           <!-- <v-chip>#Union-Find</v-chip> -->
