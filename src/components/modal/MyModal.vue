@@ -187,12 +187,22 @@ const onSubmit = async (values) => {
                   <!-- タグ機能はあとで... -->
                   <v-col cols="12">
                     <Field name="tags" v-slot="{ field, errors }">
-                      <v-combobox
+                      <!-- v-checkbox内でv-forをつかってinfoJson.tagsを全部表示 -->
+                      <v-checkbox
+                        v-for="tag in infoJson.tags"
+                        v-bind="field"
+                        :label="tag"
+                        :value="tag"
+                        :key="tag"
+                        :error-messages="errors"
+                      ></v-checkbox>
+
+                      <!-- <v-combobox
                         v-bind="field"
                         label="Tags"
                         :error-messages="errors"
                         :items="infoJson.tags"
-                      ></v-combobox>
+                      ></v-combobox> -->
 
                       <!-- <v-combobox
                       v-bind="field"

@@ -15,6 +15,8 @@ const schema = yup.object({
   problemUrl: yup.string().required().url().label("Problem URL"),
   username: yup.string().max(16).label("Username"),
   reason: yup.string().max(100).required().label("Reason"),
+  tags: yup.string(),
+  // tags: yup.array().of(yup.string()).required(),
 })
 
 // -------------------------------------------------
@@ -116,6 +118,8 @@ const onSubmit = async (values) => {
     .select("*")
   console.log(error)
 }
+
+const selected = false
 </script>
 
 <!------------------------------------------
@@ -158,35 +162,19 @@ const onSubmit = async (values) => {
                   </Field>
                 </v-col>
 
-                <!-- タグ機能はあとで... -->
+                <!-- タグ機能 -->
                 <v-col cols="12">
-                  <Field name="tags" v-slot="{ field, errors }">
-                    <v-combobox
-                      v-bind="field"
-                      label="Tags"
-                      :error-messages="errors"
-                      :items="infoJson.tags"
-                    ></v-combobox>
-
-                    <!-- <v-combobox
-                      v-bind="field"
-                      label="allTags"
-                      :error-messages="errors"
-                      :items="infoJson.tags"
-                      chips
-                      multiple
-											clearable
-                    /> -->
-                    <!-- <v-col cols="12">
-											<v-combobox v-model="select" :items="items" chips clearable label="Tags" multiple>
-													<template v-slot:selection="{ attrs, item, select, selected }">
-														<v-chip v-bind="attrs" :input-value="selected" @click="select" @click:close="remove(item)">
-															<strong>{{ item }}</strong>
-														</v-chip>
-													</template>
-												</v-combobox>
-										</v-col>
-										<v-chip closable>Chip</v-chip> -->
+                  <Field name="tags" type="checkbox" v-slot="{ value, handleChange, errors }">
+                    <div v-for="(tag, index) in infoJson.tags" :key="index">
+                      <v-checkbox
+                        :model-value="value"
+                        @update:modelValue="handleChange"
+                        :label="tag"
+                        :value="tag"
+                        color="primary"
+                      />
+                    </div>
+                    <span v-if="errors.length" class="error">{{ errors[0] }}</span>
                   </Field>
                 </v-col>
 

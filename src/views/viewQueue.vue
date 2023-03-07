@@ -104,7 +104,7 @@ const inputSuccess = ref(false)
 <!-- vuetifyのワイヤーフレーム -->
 <template>
   <!-- ヘッダー -->
-  <HeaderComponent></HeaderComponent>
+  <HeaderComponent />
   <v-app id="inspire">
     <v-main class="bg-grey-lighten-3">
       <!-- 検索窓とメインを分けるだけの目的 -->
