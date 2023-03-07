@@ -150,75 +150,77 @@ const onSubmit = async (values, { resetForm }) => {
 
   <v-app id="inspire">
     <v-main class="bg-grey-lighten-3">
-      <v-container>
-        <v-row align="center" justify="center">
-          <v-sheet rounded="lg" maxWidth="1200px">
-            <h1 class="text-h5">Submit Problem</h1>
-            <Form as="v-form" :validation-schema="schema" @submit="onSubmit">
-              <v-container>
-                <v-row>
-                  <v-col cols="12">
-                    <Field name="problemUrl" v-slot="{ field, errors }">
-                      <v-text-field
-                        v-bind="field"
-                        label="Problem URL"
-                        :error-messages="errors"
-                        hint="ex. https://atcoder.jp/contests/abc283/tasks/abc283_a"
-                      />
-                    </Field>
-                  </v-col>
+      <v-container fluid>
+        <v-row>
+          <v-col cols="12" align="center" justify="center">
+            <v-sheet rounded="lg" maxWidth="1200px" class="pa-8">
+              <h1 class="text-h5 pa-3"><b>Submit Problem</b></h1>
+              <Form as="v-form" :validation-schema="schema" @submit="onSubmit">
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <Field name="problemUrl" v-slot="{ field, errors }">
+                        <v-text-field
+                          v-bind="field"
+                          label="Problem URL"
+                          :error-messages="errors"
+                          hint="ex. https://atcoder.jp/contests/abc283/tasks/abc283_a"
+                        />
+                      </Field>
+                    </v-col>
 
-                  <v-col cols="12">
-                    <Field name="username" v-slot="{ field, errors }">
-                      <v-text-field v-bind="field" label="Username (optional)" :error-messages="errors" />
-                    </Field>
-                  </v-col>
+                    <v-col cols="12">
+                      <Field name="username" v-slot="{ field, errors }">
+                        <v-text-field v-bind="field" label="Username (optional)" :error-messages="errors" />
+                      </Field>
+                    </v-col>
 
-                  <v-col cols="12">
-                    <Field name="reason" v-slot="{ field, errors }">
-                      <v-textarea v-bind="field" label="Reason" :error-messages="errors" />
-                    </Field>
-                  </v-col>
+                    <v-col cols="12">
+                      <Field name="reason" v-slot="{ field, errors }">
+                        <v-textarea v-bind="field" label="Reason" :error-messages="errors" />
+                      </Field>
+                    </v-col>
 
-                  <!-- タグ機能 -->
-                  <v-col cols="12">
-                    <v-container>
-                      <v-row dense>
-                        <Field name="tags" type="checkbox" v-slot="{ value, handleChange, errors }">
-                          <v-col v-for="(tag, index) in infoJson.tags" :key="index" :cols="2">
-                            <v-checkbox
-                              :model-value="value"
-                              @update:modelValue="handleChange"
-                              :label="tag"
-                              :value="tag"
-                              color="primary"
-                              v-model="selected"
-                            />
-                          </v-col>
-                          <span v-if="errors.length" class="error">{{ errors[0] }}</span>
-                        </Field>
-                      </v-row>
-                      <!-- {{ selected }} -->
-                    </v-container>
-                  </v-col>
+                    <!-- タグ機能 -->
+                    <v-col cols="12">
+                      <v-container class="text-left">
+                        <v-row dense>
+                          <Field name="tags" type="checkbox" v-slot="{ value, handleChange, errors }">
+                            <v-col v-for="(tag, index) in infoJson.tags" :key="index" :cols="2">
+                              <v-checkbox
+                                :model-value="value"
+                                @update:modelValue="handleChange"
+                                :label="tag"
+                                :value="tag"
+                                color="primary"
+                                v-model="selected"
+                              />
+                            </v-col>
+                            <span v-if="errors.length" class="error">{{ errors[0] }}</span>
+                          </Field>
+                        </v-row>
+                        <!-- {{ selected }} -->
+                      </v-container>
+                    </v-col>
 
-                  <v-col cols="12">
-                    <v-btn color="primary" class="mr-4" type="submit">Submit</v-btn>
-                  </v-col>
-                  <v-alert
-                    density="comfortable"
-                    type="success"
-                    variant="tonal"
-                    width="180px"
-                    class="mx-auto"
-                    v-if="inputSuccess"
-                  >
-                    Submitted!
-                  </v-alert>
-                </v-row>
-              </v-container>
-            </Form>
-          </v-sheet>
+                    <v-col cols="12">
+                      <v-btn color="primary" type="submit">Submit</v-btn>
+                    </v-col>
+                    <v-alert
+                      density="comfortable"
+                      type="success"
+                      variant="tonal"
+                      width="180px"
+                      class="mx-auto"
+                      v-if="inputSuccess"
+                    >
+                      Submitted!
+                    </v-alert>
+                  </v-row>
+                </v-container>
+              </Form>
+            </v-sheet>
+          </v-col>
         </v-row>
       </v-container>
     </v-main>
