@@ -15,8 +15,7 @@ const schema = yup.object({
   problemUrl: yup.string().required().url().label("Problem URL"),
   username: yup.string().max(16).label("Username"),
   reason: yup.string().max(100).required().label("Reason"),
-  tags: yup.string(),
-  // tags: yup.array().of(yup.string()).required(),
+  // tags: yup.array().of(yup.string()),
 })
 
 // -------------------------------------------------
@@ -111,7 +110,7 @@ const onSubmit = async (values) => {
         difficulty: difficulty,
         username: values.username,
         reason: values.reason,
-        tags: [values.tags],
+        tags: selected.value,
         url: values.problemUrl,
       },
     ])
@@ -119,7 +118,7 @@ const onSubmit = async (values) => {
   console.log(error)
 }
 
-const selected = false
+const selected = ref([])
 </script>
 
 <!------------------------------------------
@@ -172,10 +171,12 @@ const selected = false
                         :label="tag"
                         :value="tag"
                         color="primary"
+                        v-model="selected"
                       />
                     </div>
                     <span v-if="errors.length" class="error">{{ errors[0] }}</span>
                   </Field>
+                  {{ selected }}
                 </v-col>
 
                 <v-col cols="12">
