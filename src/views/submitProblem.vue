@@ -163,20 +163,24 @@ const selected = ref([])
 
                 <!-- タグ機能 -->
                 <v-col cols="12">
-                  <Field name="tags" type="checkbox" v-slot="{ value, handleChange, errors }">
-                    <div v-for="(tag, index) in infoJson.tags" :key="index">
-                      <v-checkbox
-                        :model-value="value"
-                        @update:modelValue="handleChange"
-                        :label="tag"
-                        :value="tag"
-                        color="primary"
-                        v-model="selected"
-                      />
-                    </div>
-                    <span v-if="errors.length" class="error">{{ errors[0] }}</span>
-                  </Field>
-                  {{ selected }}
+                  <v-container>
+                    <v-row dense>
+                      <Field name="tags" type="checkbox" v-slot="{ value, handleChange, errors }">
+                        <v-col v-for="(tag, index) in infoJson.tags" :key="index" :cols="2">
+                          <v-checkbox
+                            :model-value="value"
+                            @update:modelValue="handleChange"
+                            :label="tag"
+                            :value="tag"
+                            color="primary"
+                            v-model="selected"
+                          />
+                        </v-col>
+                        <span v-if="errors.length" class="error">{{ errors[0] }}</span>
+                      </Field>
+                    </v-row>
+                    <!-- {{ selected }} -->
+                  </v-container>
                 </v-col>
 
                 <v-col cols="12">

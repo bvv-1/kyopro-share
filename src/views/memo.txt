@@ -32,3 +32,7 @@ props: 親から子への値渡し
 
 困ったら// eslint-disable-next-line
 でeslintを回避
+
+モーダル
+https://qiita.com/is_ryo/items/6bfa55599becd2f35879#%E3%83%A2%E3%83%BC%E3%83%80%E3%83%AB%E3%82%92%E4%BD%BF%E3%81%84%E3%81%9F%E3%81%84
+表とかはページネーションもできる！
