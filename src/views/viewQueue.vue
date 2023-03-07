@@ -1,10 +1,9 @@
 <!-- javascriptを記述する場所 -->
 <script setup>
-import { ref, computed, watch } from "vue"
+import { ref, computed } from "vue"
 import { supabase } from "../supabase.js"
 
 import HeaderComponent from "@/components/HeaderComponent.vue"
-import DifficultyCircle from "@/components/DifficultyCircle.vue"
 
 // queues: データベースの中身そのまま持ってくる、登録した問題
 const queues = ref([])
