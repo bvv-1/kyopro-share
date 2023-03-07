@@ -7,7 +7,6 @@ import { supabase } from "../supabase.js"
 
 import HeaderComponent from "@/components/HeaderComponent.vue"
 import DifficultyCircle from "@/components/DifficultyCircle.vue"
-import AddQueue from "@/components/modal/AddQueue.vue"
 
 // problems: データベースの中身そのまま持ってくる、登録した問題
 const problems = ref([])
@@ -96,22 +95,6 @@ const openProblem = (url) => {
 const inputSuccess = ref(false)
 const setInputSuccess = (isok) => {
   inputSuccess.value = isok
-}
-</script>
-
-<!------------------------------------------
-  modal用
-------------------------------------------->
-<script>
-export default {
-  components: {
-    AddQueue,
-  },
-  data() {
-    return {
-      showModal: false,
-    }
-  },
 }
 </script>
 
@@ -245,18 +228,8 @@ export default {
                           <v-col>
                             <!-- 編集リクエストを送れるようにする予定 -->
                             <div class="my-2">
-                              <v-btn color="primary" fab small dark id="show-modal" @click="showModal = true">
-                                <v-icon>mdi-pencil</v-icon>
-
-                                <!-- <v-btn id="show-modal" @click="showModal = true">Submit</v-btn>		 -->
-                                <Teleport to="body">
-                                  <!-- use the modal component, pass in the prop -->
-                                  <AddQueue :show="showModal" @close="showModal = false">
-                                    <template #header>
-                                      <h3>Submit a new problem</h3>
-                                    </template>
-                                  </AddQueue>
-                                </Teleport>
+                              <v-btn color="primary">
+                                <v-icon icon="mdi-pencil" />
                               </v-btn>
                             </div>
                           </v-col>

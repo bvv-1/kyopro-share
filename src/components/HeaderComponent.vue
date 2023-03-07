@@ -1,20 +1,4 @@
-<script setup>
-import Modal from "@/components/modal/MyModal.vue"
-</script>
-
-<!-- modal用 -->
-<script>
-export default {
-  components: {
-    Modal,
-  },
-  data() {
-    return {
-      showModal: false,
-    }
-  },
-}
-</script>
+<script setup></script>
 
 <template>
   <v-app-bar flat>
@@ -24,18 +8,10 @@ export default {
         <img src="https://bvv.s-ul.eu/DmVCALiV" />
       </v-avatar>
 
-      <v-btn>About</v-btn>
+      <v-btn to="/about">About</v-btn>
       <v-btn to="/">List</v-btn>
       <!-- <v-btn to="/submit">Submit</v-btn> -->
-      <v-btn id="show-modal" @click="showModal = true">Submit</v-btn>
-      <Teleport to="body">
-        <!-- use the modal component, pass in the prop -->
-        <modal :show="showModal" @close="showModal = false">
-          <template #header>
-            <h3>Submit a new problem</h3>
-          </template>
-        </modal>
-      </Teleport>
+      <v-btn to="/submit">Submit</v-btn>
       <v-btn to="/queue">Queue</v-btn>
 
       <v-spacer></v-spacer>
