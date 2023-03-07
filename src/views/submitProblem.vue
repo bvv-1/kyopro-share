@@ -76,8 +76,14 @@ const fetchDifficulty = async (problemId) => {
 // -------------------------------------------------
 // submit関連
 // -------------------------------------------------
-const onSubmit = async (values) => {
+const onSubmit = async (values, { resetForm }) => {
   console.log(values)
+
+  if (selected.value.length > 3) {
+    alert("Error! Please select <4 tags.")
+    return
+  }
+
   const [contestId, problemId] = parseUrl(values.problemUrl)
   console.log(`contestId: ${contestId}\nproblemId: ${problemId}`)
   // バリデーションに失敗したら何もしない
@@ -115,7 +121,13 @@ const onSubmit = async (values) => {
       },
     ])
     .select("*")
-  console.log(error)
+
+  if (error !== null) {
+    alert(error)
+  } else {
+    resetForm()
+    selected.value = []
+  }
 }
 
 const selected = ref([])
