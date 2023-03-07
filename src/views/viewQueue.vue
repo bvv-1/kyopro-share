@@ -6,8 +6,7 @@ import { supabase } from "../supabase.js"
 import HeaderComponent from "@/components/HeaderComponent.vue"
 import DifficultyCircle from "@/components/DifficultyCircle.vue"
 
-// problems: データベースの中身そのまま持ってくる、登録した問題
-const problems = ref([])
+// queues: データベースの中身そのまま持ってくる、登録した問題
 const queues = ref([])
 
 // Pythonと違って型によってsort法変えないといけないので条件分岐
@@ -21,26 +20,16 @@ const sortStuff = (array, key) => {
 
 // sortKey: currentKeyに従ってsort
 const sortByKey = computed(() => (currentKey) => {
-  const sortedProblems = sortStuff(problems.value, currentKey)
-  console.log(sortedProblems)
-  return sortedProblems
+  console.log(currentKey)
+  queues.value = sortStuff(queues.value, currentKey)
 })
 
-// カード表示のため、データベースの中身すべてproblemsに入れる
-const fetchProblems = async () => {
-  let { data, error, status } = await supabase.from("problems").select("*")
-  console.log(error)
-  problems.value = data
-}
-fetchProblems()
-
-// カード表示のため、データベースの中身すべてproblemsに入れる
+// カード表示のため、データベースの中身すべてqueuesに入れる
 const fetchQueues = async () => {
   let { data, error, status } = await supabase.from("queue").select("*")
   console.log(error)
   queues.value = data
   console.log(queues.value)
-  console.log(typeof queues.value[0]["created_at"])
 }
 fetchQueues()
 
@@ -88,16 +77,8 @@ const updateTask = async (task) => {
 }
 
 const openProblem = (url) => {
-  console.log(url)
   window.open(url, "_blank")
 }
-
-const inputSuccess = ref(false)
-
-// watch(emitの値, () => {
-//     if (emitがtrue) inputSuccess.value = true
-//     else inputSuccess.value = false
-// })
 </script>
 
 <!-- マークアップでhtmlを記述する場所 -->
@@ -123,13 +104,10 @@ const inputSuccess = ref(false)
                 <v-divider class="my-2"></v-divider>
 
                 <v-list-item link color="grey-lighten-4">
-                  <v-list-item-title @click="sortByKey('difficulty')">Sort by Difficulty</v-list-item-title>
-                </v-list-item>
-                <v-list-item link color="grey-lighten-4">
                   <v-list-item-title @click="sortByKey('created_at')">Sort by Time</v-list-item-title>
                 </v-list-item>
                 <v-list-item link color="grey-lighten-4">
-                  <v-list-item-title @click="sortByKey('username')">Sort by Username</v-list-item-title>
+                  <v-list-item-title @click="sortByKey('type')">Sort by Type</v-list-item-title>
                 </v-list-item>
                 <v-list-item link color="grey-lighten-4">
                   <v-list-item-title @click="fetchQueues()">Reload</v-list-item-title>
@@ -149,17 +127,15 @@ const inputSuccess = ref(false)
                       <th class="text-left">Time</th>
                       <th class="text-left">Name</th>
                       <th class="text-left">Type</th>
-                      <th class="text-left">New Reason</th>
                       <th class="text-left">Purpose</th>
                       <th class="text-left">Comment</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="queue in queues" :key="queue.id">
-                      <!-- <td>{{ queue.created_at.slice(0, 10) }}</td> -->
+                      <td>{{ queue.created_at.slice(0, 10) }}</td>
                       <td>{{ queue.username }}</td>
                       <td>{{ queue.type }}</td>
-                      <td>{{ queue.new_reason }}</td>
                       <td>{{ queue.purpose }}</td>
                       <td>{{ queue.comment }}</td>
                     </tr>

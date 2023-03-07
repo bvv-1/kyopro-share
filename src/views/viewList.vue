@@ -14,6 +14,10 @@ const problems = ref([])
 // sortStuff: あらゆるものをsortする関数
 // Pythonと違って型によってsort法変えないといけないので条件分岐
 const sortStuff = (array, key) => {
+  // 例外処理
+  if (array.length === 0) {
+    return array
+  }
   if (typeof array[0][key] === "number") {
     return array.sort((a, b) => a[key] - b[key])
   } else {
@@ -23,9 +27,8 @@ const sortStuff = (array, key) => {
 
 // sortKey: currentKeyに従ってsort
 const sortByKey = computed(() => (currentKey) => {
-  const sortedProblems = sortStuff(problems.value, currentKey)
-  console.log(sortedProblems)
-  return sortedProblems
+  console.log(currentKey)
+  problems.value = sortStuff(problems.value, currentKey)
 })
 
 // problemsテーブルの中身をすべてproblemsに入れる
