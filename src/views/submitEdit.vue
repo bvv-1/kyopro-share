@@ -26,7 +26,7 @@ const schema = yup.object({
 const checkPostId = async (postId) => {
   const { data, error } = await supabase.from("problems").select("*").eq("id", postId).select("*")
 
-  console.log(data)
+  // console.log(data)
   if (error !== null) {
     alert(error)
     return false
@@ -36,7 +36,7 @@ const checkPostId = async (postId) => {
 }
 
 const onSubmit = async (values, { resetForm }) => {
-  console.log(values)
+  // console.log(values)
 
   // problemsというテーブルにpostIdと同一のidのカラムをカウント
   if (checkPostId(values.postId) === false) {

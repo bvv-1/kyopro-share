@@ -27,14 +27,13 @@ const sortStuff = (array, key) => {
 
 // sortKey: currentKeyに従ってsort
 const sortByKey = computed(() => (currentKey) => {
-  console.log(currentKey)
   problems.value = sortStuff(problems.value, currentKey)
 })
 
 // problemsテーブルの中身をすべてproblemsに入れる
 const fetchProblems = async () => {
   const { data, error } = await supabase.from("problems").select("*")
-  console.log(error)
+  // console.log(error)
   problems.value = data
 }
 fetchProblems()

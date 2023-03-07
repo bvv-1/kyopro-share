@@ -19,16 +19,16 @@ const sortStuff = (array, key) => {
 
 // sortKey: currentKeyに従ってsort
 const sortByKey = computed(() => (currentKey) => {
-  console.log(currentKey)
+  // console.log(currentKey)
   queues.value = sortStuff(queues.value, currentKey)
 })
 
 // カード表示のため、データベースの中身すべてqueuesに入れる
 const fetchQueues = async () => {
   let { data, error, status } = await supabase.from("queue").select("*")
-  console.log(error)
+  // console.log(error)
   queues.value = data
-  console.log(queues.value)
+  // console.log(queues.value)
 }
 fetchQueues()
 
@@ -39,7 +39,7 @@ const task = ref("")
 // 削除予定
 const getTasks = async () => {
   const { data, error, status } = await supabase.from("tasks").select("*")
-  console.log(error)
+  // console.log(error)
   tasks.value = data
 }
 getTasks()
@@ -50,7 +50,7 @@ const addTask = async () => {
     .from("tasks")
     .insert([{ task: task.value }])
     .select("*")
-  console.log(error)
+  // console.log(error)
   tasks.value.push(data[0])
   task.value = ""
 }
@@ -58,7 +58,7 @@ const addTask = async () => {
 // 削除予定
 const deleteTask = async (id) => {
   const { data, error } = await supabase.from("tasks").delete().eq("id", id).select("id")
-  console.log(error)
+  // console.log(error)
   const index = tasks.value.findIndex((task) => task.id === data[0].id)
   tasks.value.splice(index, 1)
 }
@@ -70,7 +70,7 @@ const updateTask = async (task) => {
     .update({ completed: task.completed })
     .eq("id", task.id)
     .select("*")
-  console.log(error)
+  // console.log(error)
   const currentTask = tasks.value.find((task) => task.id === data[0].id)
   currentTask.completed = data[0].completed
 }

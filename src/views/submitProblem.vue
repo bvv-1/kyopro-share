@@ -48,16 +48,16 @@ const fetchProblemInfo = async (problemId) => {
 
   try {
     const response = await axios.get(url)
-    console.log(response.data)
+    // console.log(response.data)
 
     const dataIndex = response.data.findIndex((data) => data.id === problemId)
     if (dataIndex === -1) return null
-    console.log(dataIndex)
+    // console.log(dataIndex)
 
-    console.log(response.data[dataIndex])
+    // console.log(response.data[dataIndex])
     return response.data[dataIndex]
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return null
   }
 }
@@ -67,12 +67,12 @@ const fetchDifficulty = async (problemId) => {
   const url = "https://kenkoooo.com/atcoder/resources/problem-models.json"
   try {
     const response = await axios.get(url)
-    console.log(response.data)
+    // console.log(response.data)
 
-    console.log(response.data[problemId].difficulty)
+    // console.log(response.data[problemId].difficulty)
     return response.data[problemId].difficulty
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return null
   }
 }
@@ -81,7 +81,7 @@ const fetchDifficulty = async (problemId) => {
 // submit関連
 // -------------------------------------------------
 const onSubmit = async (values, { resetForm }) => {
-  console.log(values)
+  // console.log(values)
 
   if (selected.value.length >= 4) {
     alert("Error! Please select <4 tags.")
@@ -93,7 +93,7 @@ const onSubmit = async (values, { resetForm }) => {
   }
 
   const [contestId, problemId] = parseUrl(values.problemUrl)
-  console.log(`contestId: ${contestId}\nproblemId: ${problemId}`)
+  // console.log(`contestId: ${contestId}\nproblemId: ${problemId}`)
   // バリデーションに失敗したら何もしない
   if (contestId === null || problemId === null) {
     alert(
@@ -104,7 +104,7 @@ const onSubmit = async (values, { resetForm }) => {
 
   // 分割代入かつPromise.allで並列処理
   const [problemInfo, difficulty] = await Promise.all([fetchProblemInfo(problemId), fetchDifficulty(problemId)])
-  console.log(`problemInfo: ${problemInfo}\ndifficulty: ${difficulty}`)
+  // console.log(`problemInfo: ${problemInfo}\ndifficulty: ${difficulty}`)
   // バリデーションに失敗したら何もしない
   if (problemInfo === null || difficulty === null) {
     alert(
