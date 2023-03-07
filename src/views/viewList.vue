@@ -21,7 +21,6 @@ const sortStuff = (array, key) => {
   }
 }
 
-// ????
 // sortKey: currentKeyに従ってsort
 const sortByKey = computed(() => (currentKey) => {
   const sortedProblems = sortStuff(problems.value, currentKey)
@@ -36,6 +35,11 @@ const fetchProblems = async () => {
   problems.value = data
 }
 fetchProblems()
+
+// ボタンを押したらその問題のURLを開く
+const openProblem = (url) => {
+  window.open(url, "_blank")
+}
 
 // ----------------------------------------------
 // 後で削除予定

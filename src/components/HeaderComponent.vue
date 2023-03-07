@@ -8,9 +8,8 @@
         <img src="https://bvv.s-ul.eu/DmVCALiV" />
       </v-avatar>
 
-      <v-btn to="/about">About</v-btn>
+      <v-btn to="about">About</v-btn>
       <v-btn to="/">List</v-btn>
-      <!-- <v-btn to="/submit">Submit</v-btn> -->
       <v-btn to="/submit">Submit</v-btn>
       <v-btn to="/queue">Queue</v-btn>
 
