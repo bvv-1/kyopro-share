@@ -6,6 +6,7 @@ import viewAbout from "@/views/viewAbout.vue"
 import viewList from "@/views/viewList.vue"
 import viewQueue from "@/views/viewQueue.vue"
 import submitProblem from "@/views/submitProblem.vue"
+import submitEdit from "@/views/submitEdit.vue"
 
 const routes = [
   {
@@ -37,6 +38,12 @@ const routes = [
     path: "/submit",
     name: "submitProblem",
     component: submitProblem,
+  },
+  {
+    // edit画面
+    path: "/edit",
+    name: "submitEdit",
+    component: submitEdit,
   },
 ]
 

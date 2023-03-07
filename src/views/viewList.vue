@@ -33,7 +33,7 @@ const sortByKey = computed(() => (currentKey) => {
 
 // problemsテーブルの中身をすべてproblemsに入れる
 const fetchProblems = async () => {
-  let { data, error, status } = await supabase.from("problems").select("*")
+  const { data, error } = await supabase.from("problems").select("*")
   console.log(error)
   problems.value = data
 }
@@ -159,7 +159,7 @@ const openProblem = (url) => {
                           <v-col>
                             <!-- 編集リクエストを送れるようにする予定 -->
                             <div class="my-2">
-                              <v-btn color="primary">
+                              <v-btn color="primary" to="/edit">
                                 <v-icon icon="mdi-pencil" />
                               </v-btn>
                             </div>

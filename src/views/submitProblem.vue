@@ -5,7 +5,7 @@
 import { ref } from "vue"
 import { Field, Form } from "vee-validate"
 import * as yup from "yup"
-import { supabase } from "@/supabase.js"
+import { supabase } from "../supabase.js"
 import axios from "axios"
 
 import infoJson from "@/assets/info.json"
