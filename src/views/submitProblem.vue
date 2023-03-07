@@ -136,11 +136,11 @@ const onSubmit = async (values, { resetForm }) => {
     resetForm()
     selected.value = []
 
-    // turn on inputSuccess for 5 seconds
+    // turn on inputSuccess for 1 second
     inputSuccess.value = true
     setTimeout(() => {
       inputSuccess.value = false
-    }, 5000)
+    }, 1000)
   }
 }
 </script>
