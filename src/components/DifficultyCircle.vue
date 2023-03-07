@@ -3,9 +3,7 @@ import { ref } from "vue"
 
 // eslint-disable-next-line
 const props = defineProps({ rating: Number })
-console.log(props)
-// eslint-disable-next-line
-// const emit = defineEmits(["countUp"])
+// console.log(props)
 
 const color = ref("")
 const styleOptions = ref({})
@@ -73,7 +71,7 @@ function getStyleOptions(color, fillRatio) {
 color.value = getColor(props.rating)
 const fillRatio = props.rating >= 3200 ? 1.0 : props.rating < 0 ? 0.0 : (props.rating % 400) / 400
 styleOptions.value = getStyleOptions(color.value, fillRatio)
-console.log(styleOptions.value)
+// console.log(styleOptions.value)
 </script>
 
 <template>
