@@ -40,66 +40,6 @@ fetchProblems()
 const openProblem = (url) => {
   window.open(url, "_blank")
 }
-
-// ----------------------------------------------
-// 後で削除予定
-// ----------------------------------------------
-// const tasks = ref([])
-// const task = ref("")
-
-// // 削除予定
-// const getTasks = async () => {
-//   const { data, error, status } = await supabase.from("tasks").select("*")
-//   console.log(error)
-//   tasks.value = data
-// }
-// getTasks()
-
-// // 削除予定
-// const addTask = async () => {
-//   const { data, error } = await supabase
-//     .from("tasks")
-//     .insert([{ task: task.value }])
-//     .select("*")
-//   console.log(error)
-//   tasks.value.push(data[0])
-//   task.value = ""
-// }
-
-// // 削除予定
-// const deleteTask = async (id) => {
-//   const { data, error } = await supabase.from("tasks").delete().eq("id", id).select("id")
-//   console.log(error)
-//   const index = tasks.value.findIndex((task) => task.id === data[0].id)
-//   tasks.value.splice(index, 1)
-// }
-
-// // 削除予定
-// const updateTask = async (task) => {
-//   const { data, error } = await supabase
-//     .from("tasks")
-//     .update({ completed: task.completed })
-//     .eq("id", task.id)
-//     .select("*")
-//   console.log(error)
-//   const currentTask = tasks.value.find((task) => task.id === data[0].id)
-//   currentTask.completed = data[0].completed
-// }
-// ----------------------------------------------
-// 後で削除予定
-// ----------------------------------------------
-
-// ボタンを押したらその問題のURLを開く
-const openProblem = (url) => {
-  console.log(url)
-  window.open(url, "_blank")
-}
-
-// useStateみたいな書き方
-const inputSuccess = ref(false)
-const setInputSuccess = (isok) => {
-  inputSuccess.value = isok
-}
 </script>
 
 <!------------------------------------------
