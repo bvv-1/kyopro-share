@@ -108,12 +108,6 @@ const setInputSuccess = (isok) => {
   <v-app id="inspire">
     <v-main class="bg-grey-lighten-3">
       <!-- 検索窓とメインを分けるだけの目的 -->
-      <v-alert density="comfortable" type="success" variant="tonal" width="180px" class="mx-auto" v-if="inputSuccess">
-        Submitted!
-      </v-alert>
-      <v-alert density="comfortable" type="success" variant="tonal" width="180px" class="mx-auto" v-else>
-        not submitted!
-      </v-alert>
       <v-container>
         <v-row>
           <!-- 左の検索窓、タグや難易度によるソート機能を追加予定 -->
