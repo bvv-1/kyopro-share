@@ -93,19 +93,19 @@ const goEdit = (postId) => {
           <v-col>
             <v-sheet min-height="70vh" rounded="lg">
               <!-- 変える部分 -->
-              <v-container>
+              <v-container align="center">
                 <v-row>
                   <!-- 表示幅が短くなるとカードは1行3→2→1個 -->
                   <v-col cols="12" md="6" lg="4" v-for="problem in problems" :key="problem.id">
-                    <!-- ワイヤーフレームではmy-12だった -->
-                    <v-card class="mx-auto my-auto" max-width="374" height="374">
+                    <!-- カードはここ以下 -->
+                    <v-card class="pa-2" maxWidth="374px" height="374px">
                       <v-container>
-                        <v-row align="center">
-                          <v-col cols="1">
+                        <v-row>
+                          <v-col cols="2">
                             <DifficultyCircle :rating="problem.difficulty" />
                           </v-col>
-                          <v-col>
-                            <v-card-title>
+                          <v-col cols="10" class="pl-0">
+                            <v-card-title class="text-left pl-0">
                               {{ problem.problem_name }}
                             </v-card-title>
                           </v-col>
@@ -113,63 +113,71 @@ const goEdit = (postId) => {
 
                         <v-card-text>
                           <v-row>
-                            <v-rating :value="4.5" color="amber" dense half-increments readonly size="14"></v-rating>
+                            <v-col cols="12" align="left" class="pl-2 py-0 my-0">
+                              <v-rating :value="4.5" color="amber" dense half-increments readonly size="14" />
+                            </v-col>
                           </v-row>
 
                           <v-row align="center">
-                            <v-col class="ml-auto">
-                              <div class="my-4 text-subtitle-1">
+                            <v-col cols="5">
+                              <div class="text-subtitle-1">
                                 {{ problem.contest_id.toUpperCase() }}
                                 -
                                 {{ problem.problem_index }}
                               </div>
                             </v-col>
 
-                            <v-col class="mr-auto">
-                              <div class="my-4 text-subtitle-1">by {{ problem.username }}</div>
+                            <v-col cols="7">
+                              <div class="text-subtitle-1">by {{ problem.username }}</div>
                             </v-col>
                           </v-row>
 
-                          <div>
-                            {{ problem.reason }}
-                          </div>
+                          <v-row>
+                            <v-col cols="12" style="height: 80px">
+                              <div class="text-left fill-height" style="overflow: hidden; text-overflow: ellipsis">
+                                <!-- {{ problem.reason }} -->
+                                <div v-if="problem.reason.length <= 59">{{ problem.reason }}</div>
+                                <div v-else>{{ problem.reason.substring(0, 59) }}...</div>
+                              </div>
+                            </v-col>
+                          </v-row>
                         </v-card-text>
 
                         <!-- 横線 -->
                         <v-divider class="mx-4"></v-divider>
 
                         <!-- タグ付け -->
-                        <!-- <v-card-text> -->
-                        <v-chip-group active-class="deep-purple accent-4 white--text" column>
-                          <v-chip>#DP</v-chip>
-                          <v-chip>#BFS</v-chip>
-                          <!-- <v-chip>#Union-Find</v-chip> -->
-                        </v-chip-group>
-                        <!-- </v-card-text> -->
+                        <v-card-text>
+                          <v-chip-group active-class="deep-purple accent-4 white--text" column>
+                            <v-chip>#DP</v-chip>
+                            <v-chip>#BFS</v-chip>
+                            <!-- <v-chip>#Union-Find</v-chip> -->
+                          </v-chip-group>
 
-                        <v-row>
-                          <v-col>
-                            <!-- 問題リンクを貼る予定 -->
-                            <v-card-actions>
-                              <v-btn
-                                color="deep-purple lighten-2"
-                                text
-                                @click="openProblem(problem.url)"
-                                class="text-decoration-underline"
-                              >
-                                Open Problem
-                              </v-btn>
-                            </v-card-actions>
-                          </v-col>
-                          <v-col>
-                            <!-- 編集リクエストを送れるようにする予定 -->
-                            <div class="my-2">
-                              <v-btn color="primary" @click="goEdit(problem.id)">
-                                <v-icon icon="mdi-pencil" />
-                              </v-btn>
-                            </div>
-                          </v-col>
-                        </v-row>
+                          <v-row>
+                            <v-col cols="8">
+                              <!-- 問題を開くボタン -->
+                              <v-card-actions>
+                                <v-btn
+                                  color="deep-purple lighten-2"
+                                  text
+                                  @click="openProblem(problem.url)"
+                                  class="text-decoration-underline"
+                                >
+                                  Open Problem
+                                </v-btn>
+                              </v-card-actions>
+                            </v-col>
+                            <v-col cols="4">
+                              <!-- 編集リクエストを送れるようにする -->
+                              <div class="my-2">
+                                <v-btn color="primary" @click="goEdit(problem.id)">
+                                  <v-icon icon="mdi-pencil" />
+                                </v-btn>
+                              </div>
+                            </v-col>
+                          </v-row>
+                        </v-card-text>
                       </v-container>
                     </v-card>
                   </v-col>
