@@ -10,10 +10,13 @@ import { supabase } from "../supabase.js"
 import infoJson from "@/assets/info.json"
 import HeaderComponent from "@/components/HeaderComponent.vue"
 
+// postID
+const selected = ref(null)
+selected.value = 19
 const inputSuccess = ref(false)
 
 const schema = yup.object({
-  postId: yup.number().required().label("Post ID"),
+  postId: yup.number().label("Post ID"),
   username: yup.string().max(16).label("Username"),
   type: yup.string().required().label("Type"),
   purpose: yup.string().required().label("Purpose"),
@@ -59,15 +62,18 @@ const checkSamePost = async (postId, username, type, purpose) => {
 
 const onSubmit = async (values, { resetForm }) => {
   // console.log(values)
+  // disabledになっていない場合を考慮
+  selected.value = values.postId || selected.value
+  values.username = values.username || "anonymous"
 
   // problemsというテーブルにpostIdと同一のidのカラムをカウント
-  if ((await checkPostId(values.postId)) === false) {
+  if ((await checkPostId(selected.value)) === false) {
     alert("Error! Invalid Post ID. Please go to the LIST page and retry.")
     return
   }
 
   // 同一の投稿が存在しないかを確認
-  if ((await checkSamePost(values.postId, values.username, values.type, values.purpose)) === false) {
+  if ((await checkSamePost(selected.value, values.username, values.type, values.purpose)) === false) {
     alert("Error! The identical post already exists.")
     return
   }
@@ -77,7 +83,7 @@ const onSubmit = async (values, { resetForm }) => {
     .from("queue")
     .insert([
       {
-        problem_id: values.postId,
+        problem_id: selected.value,
         username: values.username,
         type: values.type,
         purpose: values.purpose,
@@ -86,9 +92,10 @@ const onSubmit = async (values, { resetForm }) => {
     .select("*")
 
   if (error !== null) {
-    alert(error)
+    console.log(error)
   } else {
     resetForm()
+    selected.value = null
 
     // turn on inputSuccess for 1 second
     inputSuccess.value = true
@@ -121,11 +128,13 @@ const onSubmit = async (values, { resetForm }) => {
                     <v-col cols="12">
                       <Field name="postId" v-slot="{ field, errors }">
                         <v-text-field
+                          v-if="selected === null"
                           v-bind="field"
                           label="Post ID"
                           :error-messages="errors"
-                          hint="Post ID corresponds to the number after '?id=' in the /detail page."
+                          hint="Post ID must correspond to the number after '?id=' in the /detail page."
                         />
+                        <v-text-field v-else disabled label="Post ID" :error-messages="errors" />
                       </Field>
                     </v-col>
 
