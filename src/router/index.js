@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router"
 
 // viewsのvueファイルにRouterする際は加える
-import indexView from "@/views/indexView.vue"
 import viewAbout from "@/views/viewAbout.vue"
 import viewList from "@/views/viewList.vue"
 import viewQueue from "@/views/viewQueue.vue"
@@ -9,12 +8,6 @@ import submitProblem from "@/views/submitProblem.vue"
 import submitEdit from "@/views/submitEdit.vue"
 
 const routes = [
-  {
-    // props, enumのテスト用
-    path: "/index",
-    name: "indexView",
-    component: indexView,
-  },
   {
     // 遊び方
     path: "/about",

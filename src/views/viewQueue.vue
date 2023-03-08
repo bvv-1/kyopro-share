@@ -1,4 +1,6 @@
-<!-- javascriptを記述する場所 -->
+<!------------------------------------------
+  javascriptの部分
+------------------------------------------->
 <script setup>
 import { ref, computed } from "vue"
 import { supabase } from "../supabase.js"
@@ -23,7 +25,7 @@ const sortByKey = computed(() => (currentKey) => {
   queues.value = sortStuff(queues.value, currentKey)
 })
 
-// カード表示のため、データベースの中身すべてqueuesに入れる
+// テーブル表示のため、データベースの中身すべてqueuesに入れる
 const fetchQueues = async () => {
   let { data, error, status } = await supabase.from("queue").select("*")
   // console.log(error)
@@ -31,59 +33,13 @@ const fetchQueues = async () => {
   // console.log(queues.value)
 }
 fetchQueues()
-
-// 後で削除予定
-const tasks = ref([])
-const task = ref("")
-
-// 削除予定
-const getTasks = async () => {
-  const { data, error, status } = await supabase.from("tasks").select("*")
-  // console.log(error)
-  tasks.value = data
-}
-getTasks()
-
-// 削除予定
-const addTask = async () => {
-  const { data, error } = await supabase
-    .from("tasks")
-    .insert([{ task: task.value }])
-    .select("*")
-  // console.log(error)
-  tasks.value.push(data[0])
-  task.value = ""
-}
-
-// 削除予定
-const deleteTask = async (id) => {
-  const { data, error } = await supabase.from("tasks").delete().eq("id", id).select("id")
-  // console.log(error)
-  const index = tasks.value.findIndex((task) => task.id === data[0].id)
-  tasks.value.splice(index, 1)
-}
-
-// 削除予定
-const updateTask = async (task) => {
-  const { data, error } = await supabase
-    .from("tasks")
-    .update({ completed: task.completed })
-    .eq("id", task.id)
-    .select("*")
-  // console.log(error)
-  const currentTask = tasks.value.find((task) => task.id === data[0].id)
-  currentTask.completed = data[0].completed
-}
-
-const openProblem = (url) => {
-  window.open(url, "_blank")
-}
 </script>
 
-<!-- マークアップでhtmlを記述する場所 -->
-<!-- vuetifyのワイヤーフレーム -->
+<!------------------------------------------
+  Reactでいうreturnの部分
+  Vuetifyのワイヤーフレーム
+------------------------------------------->
 <template>
-  <!-- ヘッダー -->
   <HeaderComponent />
 
   <v-app id="inspire">
