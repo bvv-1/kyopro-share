@@ -7,10 +7,15 @@ import { Field, Form } from "vee-validate"
 import * as yup from "yup"
 import { supabase } from "../supabase.js"
 import axios from "axios"
+import MdEditor from "md-editor-v3"
+import "md-editor-v3/lib/style.css"
 
 import infoJson from "@/assets/info.json"
 import HeaderComponent from "@/components/HeaderComponent.vue"
 
+const reason = ref("## Write your reason here!")
+const reasonHtml = ref("")
+const excludeToolbars = ["save", "pageFullscreen", "fullscreen", "catalog"]
 // 選択したタグ
 const selected = ref([])
 const inputSuccess = ref(false)
@@ -18,8 +23,7 @@ const inputSuccess = ref(false)
 const schema = yup.object({
   problemUrl: yup.string().required().url().label("Problem URL"),
   username: yup.string().max(16).label("Username"),
-  reason: yup.string().max(100).required().label("Reason"),
-  // tags: yup.array().of(yup.string()),
+  // reason: yup.string().required().label("Reason"),
 })
 
 // -------------------------------------------------
@@ -123,7 +127,8 @@ const onSubmit = async (values, { resetForm }) => {
         problem_name: problemInfo.name,
         difficulty: difficulty,
         username: values.username,
-        reason: values.reason,
+        reason: reason.value,
+        reason_html: reasonHtml.value,
         tags: selected.value,
         url: values.problemUrl,
       },
@@ -135,6 +140,7 @@ const onSubmit = async (values, { resetForm }) => {
   } else {
     resetForm()
     selected.value = []
+    reason.value = "## Write your reason here!"
 
     // turn on inputSuccess for 1 second
     inputSuccess.value = true
@@ -142,6 +148,10 @@ const onSubmit = async (values, { resetForm }) => {
       inputSuccess.value = false
     }, 1000)
   }
+}
+
+const onHtmlChanged = (h) => {
+  reasonHtml.value = h
 }
 </script>
 
@@ -179,10 +189,20 @@ const onSubmit = async (values, { resetForm }) => {
                       </Field>
                     </v-col>
 
-                    <v-col cols="12">
+                    <!-- <v-col cols="12">
                       <Field name="reason" v-slot="{ field, errors }">
                         <v-textarea v-bind="field" label="Reason" :error-messages="errors" />
                       </Field>
+                    </v-col> -->
+
+                    <v-col cols="12" align="start">
+                      <md-editor
+                        v-model="reason"
+                        language="en-US"
+                        @on-html-changed="onHtmlChanged"
+                        :noUploadImg="true"
+                        :toolbarsExclude="excludeToolbars"
+                      />
                     </v-col>
 
                     <!-- タグ機能 -->
