@@ -67,12 +67,16 @@ styleOptions.value = getStyleOptions(color.value, fillRatio)
 
 <style>
 #dcircle {
-  display: inline-block;
+  /* display: inline-block; */
+
   border-radius: 50%;
   border-style: solid;
   border-width: 2px;
-  margin-right: 5px;
+
   height: 30px;
   width: 30px;
+
+  /* 上下にオフセット */
+  margin-top: 8.5px;
 }
 </style>
