@@ -32,15 +32,43 @@ const checkPostId = async (postId) => {
     return false
   }
   // 三項演算子を使用
-  return data ? true : false
+  if (data.length === 0) return false
+  return true
+}
+
+// 同一の投稿が存在しないかを確認
+const checkSamePost = async (postId, username, type, purpose) => {
+  const { data, error } = await supabase
+    .from("queue")
+    .select("*")
+    .eq("problem_id", postId)
+    .eq("username", username)
+    .eq("type", type)
+    .eq("purpose", purpose)
+    .select("*")
+
+  if (error !== null) {
+    alert(error)
+    return false
+  }
+  // 三項演算子を使用
+  if (data.length === 0) return true
+  console.log(data)
+  return false
 }
 
 const onSubmit = async (values, { resetForm }) => {
   // console.log(values)
 
   // problemsというテーブルにpostIdと同一のidのカラムをカウント
-  if (checkPostId(values.postId) === false) {
+  if ((await checkPostId(values.postId)) === false) {
     alert("Error! Invalid Post ID. Please go to the LIST page and retry.")
+    return
+  }
+
+  // 同一の投稿が存在しないかを確認
+  if ((await checkSamePost(values.postId, values.username, values.type, values.purpose)) === false) {
+    alert("Error! The identical post already exists.")
     return
   }
 
@@ -92,7 +120,12 @@ const onSubmit = async (values, { resetForm }) => {
                   <v-row>
                     <v-col cols="12">
                       <Field name="postId" v-slot="{ field, errors }">
-                        <v-text-field v-bind="field" label="Post ID" :error-messages="errors" />
+                        <v-text-field
+                          v-bind="field"
+                          label="Post ID"
+                          :error-messages="errors"
+                          hint="Post ID corresponds to the number after '?id=' in the /detail page."
+                        />
                       </Field>
                     </v-col>
 
