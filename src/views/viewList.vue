@@ -3,6 +3,7 @@
 ------------------------------------------->
 <script setup>
 import { ref, computed } from "vue"
+import router from "@/router"
 import { supabase } from "../supabase.js"
 
 import HeaderComponent from "@/components/HeaderComponent.vue"
@@ -41,6 +42,11 @@ fetchProblems()
 // ボタンを押したらその問題のURLを開く
 const openProblem = (url) => {
   window.open(url, "_blank")
+}
+
+const goEdit = (postId) => {
+  console.log(postId)
+  router.push({ name: "submitEdit", query: { id: postId } })
 }
 </script>
 
@@ -158,7 +164,7 @@ const openProblem = (url) => {
                           <v-col>
                             <!-- 編集リクエストを送れるようにする予定 -->
                             <div class="my-2">
-                              <v-btn color="primary" to="/edit">
+                              <v-btn color="primary" @click="goEdit(problem.id)">
                                 <v-icon icon="mdi-pencil" />
                               </v-btn>
                             </div>

@@ -3,6 +3,7 @@
 ------------------------------------------->
 <script setup>
 import { ref } from "vue"
+import route from "@/router"
 import { Field, Form } from "vee-validate"
 import * as yup from "yup"
 import { supabase } from "../supabase.js"
@@ -11,8 +12,8 @@ import infoJson from "@/assets/info.json"
 import HeaderComponent from "@/components/HeaderComponent.vue"
 
 // postID
-const selected = ref(null)
-selected.value = 19
+const selected = ref(route.currentRoute["_value"].query.id || null)
+
 const inputSuccess = ref(false)
 
 const schema = yup.object({
