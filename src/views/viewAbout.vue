@@ -67,7 +67,7 @@ import pic_tags_submit from "@/assets/tags_submit.jpg"
                   <div class="text-left">
                     <h4 class="text-h6 ml-8 my-8"><b>登録した問題を変更する</b></h4>
                     <p>上部のタブから QUEUE を選択します。</p>
-                    <p>編集中...</p>
+                    <p>編集中....</p>
                   </div>
                   <v-img
                     :src="pic_solve_problem"
