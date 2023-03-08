@@ -135,7 +135,7 @@ const goEdit = (postId) => {
                           <v-row>
                             <v-col cols="12" style="height: 80px">
                               <div class="text-left fill-height" style="overflow: hidden; text-overflow: ellipsis">
-                                <!-- {{ problem.reason }} -->
+                                <!-- 59字を超過したら三点リーダー -->
                                 <div v-if="problem.reason.length <= 59">{{ problem.reason }}</div>
                                 <div v-else>{{ problem.reason.substring(0, 59) }}...</div>
                               </div>

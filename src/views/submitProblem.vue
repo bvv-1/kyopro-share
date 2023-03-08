@@ -208,7 +208,7 @@ const onSubmit = async (values, { resetForm }) => {
                     </v-col>
 
                     <v-col cols="12">
-                      <v-btn color="primary" type="submit">Submit</v-btn>
+                      <v-btn color="primary" type="submit" style="width: 300px">Submit</v-btn>
                     </v-col>
                     <v-alert
                       density="comfortable"
