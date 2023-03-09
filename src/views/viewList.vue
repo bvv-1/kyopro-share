@@ -45,8 +45,11 @@ const openProblem = (url) => {
 }
 
 const goEdit = (postId) => {
-  console.log(postId)
   router.push({ name: "submitEdit", query: { id: postId } })
+}
+
+const goDetail = (postId) => {
+  router.push({ name: "viewDetail", query: { id: postId } })
 }
 </script>
 
@@ -97,7 +100,7 @@ const goEdit = (postId) => {
                 <v-row>
                   <v-col v-for="problem in problems" :key="problem.id" class="pa-auto">
                     <!-- カードはここ以下 -->
-                    <v-card class="pa-0" width="374px" height="374px">
+                    <v-card class="pa-0" width="374px" height="374px" @click="goDetail(problem.id)">
                       <v-container>
                         <v-row>
                           <v-col cols="2">
@@ -160,7 +163,7 @@ const goEdit = (postId) => {
                                 <v-btn
                                   color="deep-purple lighten-2"
                                   text
-                                  @click="openProblem(problem.url)"
+                                  @click.stop="openProblem(problem.url)"
                                   class="text-decoration-underline"
                                 >
                                   Open Problem
@@ -170,7 +173,7 @@ const goEdit = (postId) => {
                             <v-col cols="4">
                               <!-- 編集リクエストを送れるようにする -->
                               <div class="my-2">
-                                <v-btn color="primary" @click="goEdit(problem.id)">
+                                <v-btn color="primary" @click.stop="goEdit(problem.id)">
                                   <v-icon icon="mdi-pencil" />
                                 </v-btn>
                               </div>
