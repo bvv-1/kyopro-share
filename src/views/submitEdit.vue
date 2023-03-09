@@ -118,7 +118,7 @@ const onSubmit = async (values, { resetForm }) => {
 
   <v-app id="inspire">
     <v-main class="bg-grey-lighten-3">
-      <v-container>
+      <v-container fluid>
         <v-row>
           <v-col cols="12" align="center" justify="center">
             <v-sheet rounded="lg" maxWidth="1200px" class="pa-8">

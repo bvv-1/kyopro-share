@@ -45,7 +45,7 @@ fetchQueues()
   <v-app id="inspire">
     <v-main class="bg-grey-lighten-3">
       <!-- 検索窓とメインを分けるだけの目的 -->
-      <v-container>
+      <v-container fluid>
         <v-row>
           <!-- 左の検索窓、タグや難易度によるソート機能を追加予定 -->
           <v-col cols="2">

@@ -10,7 +10,7 @@ import pic_tags_submit from "@/assets/tags_submit.jpg"
 
   <v-app id="inspire">
     <v-main class="bg-grey-lighten-3">
-      <v-container>
+      <v-container fluid>
         <v-row>
           <v-col cols="12" align="center" justify="center">
             <v-sheet rounded="lg" maxWidth="1200px" class="pa-8">
@@ -27,7 +27,7 @@ import pic_tags_submit from "@/assets/tags_submit.jpg"
 
                 <div class="mt-3 mb-8">
                   <div class="text-left">
-                    <h4 class="text-h6 ml-8 my-8"><b>良問を解く</b></h4>
+                    <h4 class="text-h6 ml-8 my-8"><b>・良問を解く</b></h4>
                     <p>上部のタブから LIST を選択します。</p>
                     <p>OPEN PROBLEM を押すと、問題ページが開きます。</p>
                   </div>
@@ -42,7 +42,7 @@ import pic_tags_submit from "@/assets/tags_submit.jpg"
 
                 <div class="mt-3 mb-8">
                   <div class="text-left">
-                    <h4 class="text-h6 ml-8 my-8"><b>良問を登録する</b></h4>
+                    <h4 class="text-h6 ml-8 my-8"><b>・良問を登録する</b></h4>
                     <p>上部のタブから SUBMIT を選択します。</p>
                     <p>必要な情報を入力したら、SUBMIT ボタンを押します。</p>
                     <p>タグとして、問題に関係のある単語を1〜3個つけることができます。</p>
@@ -65,7 +65,7 @@ import pic_tags_submit from "@/assets/tags_submit.jpg"
 
                 <div class="mt-3 mb-8">
                   <div class="text-left">
-                    <h4 class="text-h6 ml-8 my-8"><b>登録した問題を変更する</b></h4>
+                    <h4 class="text-h6 ml-8 my-8"><b>・登録した問題を変更する</b></h4>
                     <p>上部のタブから QUEUE を選択します。</p>
                     <p>編集中....</p>
                   </div>
