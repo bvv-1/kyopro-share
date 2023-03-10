@@ -70,12 +70,6 @@ const goDetail = (postId) => {
             <v-sheet rounded="lg">
               <!-- 変える部分 -->
               <v-list rounded="lg">
-                <v-list-item v-for="n in 2" :key="n" link>
-                  <v-list-item-title>List Item {{ n }}</v-list-item-title>
-                </v-list-item>
-
-                <v-divider class="my-2"></v-divider>
-
                 <v-list-item link color="grey-lighten-4">
                   <v-list-item-title @click="sortByKey('difficulty')">Sort by Difficulty</v-list-item-title>
                 </v-list-item>
