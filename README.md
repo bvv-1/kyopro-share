@@ -23,7 +23,7 @@ npm ci
 npm run setup:env
 ```
 
-`.env` ファイルに `DATABASE_URL="データベースのURL"` となるように書く。
+`.env.local` ファイルに `VUE_APP_VITE_SUPABASE_URL="データベースのURL"` `VUE_APP_VITE_ANON_KEY="データベースのANON_KEY" となるように書く。
 
 ```shell
 npm run setup
