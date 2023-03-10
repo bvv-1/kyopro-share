@@ -1,29 +1,50 @@
-# vue-project
+# 献立作成システム（仮）
 
-## Project setup
+[https://dull-meshi.onrender.com/](https://kyopro-share.onrender.com/)
+競技プログラミングの良問を共有するためのWebサービス
 
+## 環境構築
+
+Node.js のインストール
+
+```shell
+git clone git@github.com:bvv-1/kyopro-share.git
 ```
-npm install
+
+```shell
+cd kyopro-share
 ```
 
-### Compiles and hot-reloads for development
-
+```shell
+npm ci
 ```
+
+```shell
+npm run setup:env
+```
+
+`.env` ファイルに `DATABASE_URL="データベースのURL"` となるように書く。
+
+```shell
+npm run setup
+```
+
+## Compiles and hot-reloads for development
+
+```shell
 npm run serve
-```
+`
 
-### Compiles and minifies for production
+ブラウザで [`http://localhost:8080`](http://localhost:8080) にアクセスすると、表示されるはずです。
+
+## Compiles and minifies for production
 
 ```
 npm run build
 ```
 
-### Lints and fixes files
+## Lints and Prettier
 
 ```
-npm run lint
+npm run fix
 ```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
