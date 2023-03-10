@@ -94,7 +94,7 @@ const goDetail = (postId) => {
                 <v-row>
                   <v-col v-for="problem in problems" :key="problem.id" style="flex-grow: 0">
                     <!-- カードはここ以下 -->
-                    <v-card class="pa-0" width="374px" height="374px" @click="goDetail(problem.id)">
+                    <v-card class="pa-0" width="300px" height="300px" @click="goDetail(problem.id)">
                       <v-container>
                         <v-row>
                           <v-col cols="2" align="right">
@@ -114,24 +114,24 @@ const goDetail = (postId) => {
                             </v-col>
                           </v-row>
 
-                          <v-row align="center" ref="myRow">
+                          <v-row align="center">
                             <v-col cols="5" class="pl-0">
-                              <div class="text-subtitle-1 text-center">
+                              <div class="text-center">
                                 {{ problem.contest_id.toUpperCase() }} - {{ problem.problem_index }}
                               </div>
                             </v-col>
 
                             <v-col cols="7" class="pr-0">
-                              <div class="text-subtitle-1 text-center">by {{ problem.username }}</div>
+                              <div class="text-center">by {{ problem.username }}</div>
                             </v-col>
                           </v-row>
 
                           <v-row>
-                            <v-col cols="12" style="height: 80px">
+                            <v-col cols="12" style="height: 60px">
                               <div class="text-left fill-height" style="overflow: hidden; text-overflow: ellipsis">
-                                <!-- 59字を超過したら三点リーダー -->
-                                <div v-if="problem.reason.length <= 59">{{ problem.reason }}</div>
-                                <div v-else>{{ problem.reason.substring(0, 59) }}...</div>
+                                <!-- 31字を超過したら三点リーダー -->
+                                <div v-if="problem.reason.length <= 31">{{ problem.reason }}</div>
+                                <div v-else>{{ problem.reason.substring(0, 31) }}...</div>
                               </div>
                             </v-col>
                           </v-row>
@@ -142,12 +142,6 @@ const goDetail = (postId) => {
 
                         <!-- タグ付け -->
                         <v-card-text>
-                          <v-chip-group active-class="deep-purple accent-4 white--text" column>
-                            <v-chip>#DP</v-chip>
-                            <v-chip>#BFS</v-chip>
-                            <!-- <v-chip>#Union-Find</v-chip> -->
-                          </v-chip-group>
-
                           <v-row>
                             <v-col cols="8">
                               <!-- 問題を開くボタン -->
