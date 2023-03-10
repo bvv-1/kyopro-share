@@ -1,9 +1,9 @@
 <script setup>
 import HeaderComponent from "@/components/HeaderComponent.vue"
 import pic_atcoder_problem_url from "@/assets/atcoder_problem_url.jpg"
-import pic_solve_problem from "@/assets/tmp.jpg"
+import pic_card_detail from "@/assets/card_detail.jpg"
 import pic_tags_submit from "@/assets/tags_submit.jpg"
-import pic_submit_edit from "@/assets/submit_edit.jpg"
+import pic_card_edit from "@/assets/card_edit.jpg"
 </script>
 
 <template>
@@ -30,11 +30,11 @@ import pic_submit_edit from "@/assets/submit_edit.jpg"
                   <div class="text-left">
                     <h4 class="text-h6 mx-0 my-8"><b>・良問を解く</b></h4>
                     <p>上部のタブから LIST を選択します。</p>
+                    <p>カードを押すと、推薦理由が書かれたページが開きます。</p>
                     <p>OPEN PROBLEM を押すと、問題ページが開きます。</p>
-                    <p>カード自体を押すと、推薦理由が書かれたページが開きます。</p>
                   </div>
                   <v-img
-                    :src="pic_solve_problem"
+                    :src="pic_card_detail"
                     alt="how to find problem"
                     :width="700"
                     style="box-shadow: 1px 1px 3px rgba(128, 128, 128, 0.5), -1px -1px 3px rgba(255, 255, 255, 0.5)"
@@ -73,7 +73,7 @@ import pic_submit_edit from "@/assets/submit_edit.jpg"
                     <p>必要な情報を入力したら、SUBMIT ボタンを押します。</p>
                   </div>
                   <v-img
-                    :src="pic_submit_edit"
+                    :src="pic_card_edit"
                     alt="how to submit edit"
                     :width="700"
                     style="box-shadow: 1px 1px 3px rgba(128, 128, 128, 0.5), -1px -1px 3px rgba(255, 255, 255, 0.5)"
