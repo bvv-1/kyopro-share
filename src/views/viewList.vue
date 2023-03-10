@@ -90,14 +90,14 @@ const goDetail = (postId) => {
           <v-col cols="10">
             <v-sheet min-height="70vh" rounded="lg">
               <!-- 変える部分 -->
-              <v-container align="center">
+              <v-container>
                 <v-row>
-                  <v-col v-for="problem in problems" :key="problem.id" class="pa-auto">
+                  <v-col v-for="problem in problems" :key="problem.id" style="flex-grow: 0">
                     <!-- カードはここ以下 -->
                     <v-card class="pa-0" width="374px" height="374px" @click="goDetail(problem.id)">
                       <v-container>
                         <v-row>
-                          <v-col cols="2">
+                          <v-col cols="2" align="right">
                             <DifficultyCircle :rating="problem.difficulty" />
                           </v-col>
                           <v-col cols="10" class="pl-0">
@@ -116,13 +116,13 @@ const goDetail = (postId) => {
 
                           <v-row align="center" ref="myRow">
                             <v-col cols="5" class="pl-0">
-                              <div class="text-subtitle-1">
+                              <div class="text-subtitle-1 text-center">
                                 {{ problem.contest_id.toUpperCase() }} - {{ problem.problem_index }}
                               </div>
                             </v-col>
 
                             <v-col cols="7" class="pr-0">
-                              <div class="text-subtitle-1">by {{ problem.username }}</div>
+                              <div class="text-subtitle-1 text-center">by {{ problem.username }}</div>
                             </v-col>
                           </v-row>
 
