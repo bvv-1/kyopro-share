@@ -1,6 +1,6 @@
-# 献立作成システム（仮）
+# kyopro share
 
-[https://dull-meshi.onrender.com/](https://kyopro-share.onrender.com/)
+[https://kyopro-share.onrender.com/](https://kyopro-share.onrender.com/)
 競技プログラミングの良問を共有するためのWebサービス
 
 ## 環境構築
