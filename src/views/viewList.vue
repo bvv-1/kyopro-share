@@ -123,9 +123,7 @@ const goDetail = (postId) => {
                           <v-row align="center" ref="myRow">
                             <v-col cols="5" class="pl-0">
                               <div class="text-subtitle-1">
-                                {{ problem.contest_id.toUpperCase() }}
-                                -
-                                {{ problem.problem_index }}
+                                {{ problem.contest_id.toUpperCase() }} - {{ problem.problem_index }}
                               </div>
                             </v-col>
 
