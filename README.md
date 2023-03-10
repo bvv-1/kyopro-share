@@ -33,7 +33,7 @@ npm run setup
 
 ```shell
 npm run serve
-`
+```
 
 ブラウザで [`http://localhost:8080`](http://localhost:8080) にアクセスすると、表示されるはずです。
 
