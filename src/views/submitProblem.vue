@@ -22,7 +22,7 @@ const inputSuccess = ref(false)
 
 const schema = yup.object({
   problemUrl: yup.string().required().url().label("Problem URL"),
-  username: yup.string().max(16).label("Username"),
+  username: yup.string().max(14).label("Username"),
   // reason: yup.string().required().label("Reason"),
 })
 
@@ -164,13 +164,13 @@ const onHtmlChanged = (h) => {
 
   <v-app id="inspire">
     <v-main class="bg-grey-lighten-3">
-      <v-container>
+      <v-container fluid>
         <v-row>
           <v-col cols="12" align="center" justify="center">
             <v-sheet rounded="lg" maxWidth="1200px" class="pa-8">
               <h2 class="text-h4 pa-4">Submit Problem</h2>
               <Form as="v-form" :validation-schema="schema" @submit="onSubmit">
-                <v-container>
+                <v-container fluid>
                   <v-row>
                     <v-col cols="12">
                       <Field name="problemUrl" v-slot="{ field, errors }">
@@ -207,10 +207,18 @@ const onHtmlChanged = (h) => {
 
                     <!-- タグ機能 -->
                     <v-col cols="12">
-                      <v-container class="text-left">
+                      <v-container fluid class="text-left">
                         <v-row dense>
                           <Field name="tags" type="checkbox" v-slot="{ value, handleChange, errors }">
-                            <v-col v-for="(tag, index) in infoJson.tags" :key="index" :cols="2">
+                            <v-col
+                              v-for="(tag, index) in infoJson.tags"
+                              :key="index"
+                              cols="6"
+                              sm="3"
+                              md="2"
+                              lg="2"
+                              xl="2"
+                            >
                               <v-checkbox
                                 :model-value="value"
                                 @update:modelValue="handleChange"

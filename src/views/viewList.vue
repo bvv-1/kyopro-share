@@ -45,8 +45,11 @@ const openProblem = (url) => {
 }
 
 const goEdit = (postId) => {
-  console.log(postId)
   router.push({ name: "submitEdit", query: { id: postId } })
+}
+
+const goDetail = (postId) => {
+  router.push({ name: "viewDetail", query: { id: postId } })
 }
 </script>
 
@@ -60,7 +63,7 @@ const goEdit = (postId) => {
   <v-app id="inspire">
     <v-main class="bg-grey-lighten-3">
       <!-- 検索窓とメインを分けるだけの目的 -->
-      <v-container>
+      <v-container fluid>
         <v-row>
           <!-- 左の検索窓、タグや難易度によるソート機能を追加予定 -->
           <v-col cols="2">
@@ -90,15 +93,14 @@ const goEdit = (postId) => {
           </v-col>
 
           <!-- 右のカード置き場 -->
-          <v-col>
+          <v-col cols="10">
             <v-sheet min-height="70vh" rounded="lg">
               <!-- 変える部分 -->
               <v-container align="center">
                 <v-row>
-                  <!-- 表示幅が短くなるとカードは1行3→2→1個 -->
-                  <v-col cols="12" md="6" lg="4" v-for="problem in problems" :key="problem.id">
+                  <v-col v-for="problem in problems" :key="problem.id" class="pa-auto">
                     <!-- カードはここ以下 -->
-                    <v-card class="pa-2" maxWidth="374px" height="374px">
+                    <v-card class="pa-0" width="374px" height="374px" @click="goDetail(problem.id)">
                       <v-container>
                         <v-row>
                           <v-col cols="2">
@@ -118,16 +120,14 @@ const goEdit = (postId) => {
                             </v-col>
                           </v-row>
 
-                          <v-row align="center">
-                            <v-col cols="5">
+                          <v-row align="center" ref="myRow">
+                            <v-col cols="5" class="pl-0">
                               <div class="text-subtitle-1">
-                                {{ problem.contest_id.toUpperCase() }}
-                                -
-                                {{ problem.problem_index }}
+                                {{ problem.contest_id.toUpperCase() }} - {{ problem.problem_index }}
                               </div>
                             </v-col>
 
-                            <v-col cols="7">
+                            <v-col cols="7" class="pr-0">
                               <div class="text-subtitle-1">by {{ problem.username }}</div>
                             </v-col>
                           </v-row>
@@ -161,7 +161,7 @@ const goEdit = (postId) => {
                                 <v-btn
                                   color="deep-purple lighten-2"
                                   text
-                                  @click="openProblem(problem.url)"
+                                  @click.stop="openProblem(problem.url)"
                                   class="text-decoration-underline"
                                 >
                                   Open Problem
@@ -171,7 +171,7 @@ const goEdit = (postId) => {
                             <v-col cols="4">
                               <!-- 編集リクエストを送れるようにする -->
                               <div class="my-2">
-                                <v-btn color="primary" @click="goEdit(problem.id)">
+                                <v-btn color="primary" @click.stop="goEdit(problem.id)">
                                   <v-icon icon="mdi-pencil" />
                                 </v-btn>
                               </div>
